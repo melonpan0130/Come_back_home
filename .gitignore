@@ -1,3 +1,6 @@
 .vs/
 Debug/
 Come_back_home.sln
+Come_back_home/Debug/
+*.vcxproj
+*.vcxproj.filters

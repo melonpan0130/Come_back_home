@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <time.h>
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <dinput.h>
@@ -9,7 +10,7 @@ CInput::CInput(HWND hWnd, HINSTANCE hInstance)
 	m_lpDInput = NULL;
 	m_lpKeyboard = NULL;
 
-	IntInput(hWnd, hInstance);
+	InitInput(hWnd, hInstance);
 }
 
 CInput::~CInput()
@@ -17,8 +18,10 @@ CInput::~CInput()
 	ShutdownInput();
 }
 
-int CInput::IntInput(HWND hWnd, HINSTANCE hInstance)
+int CInput::InitInput(HWND hWnd, HINSTANCE hInstance)
 {
+	m_lpDInput;
+	m_lpKeyboard;
 	try {
 		auto result = DirectInput8Create(hInstance
 			, DIRECTINPUT_VERSION

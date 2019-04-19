@@ -1,11 +1,13 @@
 #pragma once
+#include <dinput.h>
+
 class CInput
 {
 public:
 	explicit CInput(HWND hWnd, HINSTANCE hInstance);
 	virtual ~CInput();
 
-	int IntInput(HWND hWnd, HINSTANCE hInstance);
+	int InitInput(HWND hWnd, HINSTANCE hInstance);
 	void ShutdownInput();
 	bool ReadKeyboard();
 	bool IsEscapePressed();

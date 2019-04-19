@@ -2,8 +2,14 @@
 //
 
 #include "stdafx.h"
-#include "Come_back_home.h"
+#include <time.h>
+#include <tchar.h>
+#include <d3d9.h>
+#include <d3dx9.h>
+#include <dinput.h>
 
+#include "GameFramework.h"
+#include "Come_back_home.h"
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -13,6 +19,8 @@ HINSTANCE hInst;                                // 현재 인스턴스입니다.
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int, HWND&, bool);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+
+GameFramework* g_pGameframework = NULL;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -26,13 +34,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // 전역 문자열을 초기화합니다.
     MyRegisterClass(hInstance);
-	HWND hWnd;
+	HWND hWnd = NULL;
 
     // 응용 프로그램 초기화를 수행합니다:
     if (!InitInstance (hInstance, nCmdShow, hWnd, false))
     {
         return FALSE;
     }
+
+	g_pGameframework = new GameFramework();
+
+	g_pGameframework->InitFramework(hWnd, hInstance);
+	g_pGameframework->LoadTexture();
+	g_pGameframework->InitGameData();
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_COMEBACKHOME));
 
@@ -47,7 +61,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		g_pGameframework->GameUpdate(msg.message);
+		g_pGameframework->GameRender();
 	}
+	g_pGameframework->ReleaseGameData();
+	g_pGameframework->ReleaseFramework();
+	
+	delete g_pGameframework;
 
     return (int) msg.wParam;
 }
@@ -94,15 +114,21 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, HWND& rhWnd, bool fullScree
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   HWND hWnd;
+   HWND hWnd = NULL;
 
    if (fullScreen) {
-	   hWnd = CreateWindowW(TEXT("HOME"), TEXT("Come back home"), WS_POPUP | WS_EX_TOPMOST,
-		   0, 0, 1920, 1080, nullptr, nullptr, hInstance, nullptr);
+	   hWnd = CreateWindowW(TEXT("HOME")
+		   , TEXT("Come back home")
+		   , WS_EX_TOPMOST | WS_POPUP
+		   , 0, 0, 1920, 1080
+		   , nullptr, nullptr, hInstance, nullptr);
    }
    else {
-	   hWnd = CreateWindowW(TEXT("HOME"), TEXT("Come back home"), WS_OVERLAPPEDWINDOW,
-		   0, 0, 1080, 720, nullptr, nullptr, hInstance, nullptr);
+	   hWnd = CreateWindowW(TEXT("HOME")
+		   , TEXT("Come back home")
+		   , WS_OVERLAPPEDWINDOW
+		   , 0, 0, 1080, 720
+		   , nullptr, nullptr, hInstance, nullptr);
    }
 
    if (!hWnd)

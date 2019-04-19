@@ -151,7 +151,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CBackground.h" />
+    <ClInclude Include="CGameObject.h" />
+    <ClInclude Include="CInput.h" />
     <ClInclude Include="Come_back_home.h" />
+    <ClInclude Include="CSprite.h" />
+    <ClInclude Include="CText.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="Resource.h" />
@@ -159,7 +164,12 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CBackground.cpp" />
+    <ClCompile Include="CGameObject.cpp" />
+    <ClCompile Include="CInput.cpp" />
     <ClCompile Include="Come_back_home.cpp" />
+    <ClCompile Include="CSprite.cpp" />
+    <ClCompile Include="CText.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="stdafx.cpp">
