@@ -43,13 +43,6 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 
 	if (m_pD3D == NULL)return false;
 
-	RECT rc;
-	GetClientRect(hWnd, &rc);
-
-	int ClientWidth = rc.right - rc.left + 1;
-	int ClientHeight = rc.bottom - rc.top + 1;
-	// m_ScreenWidth = (float)ClientWidth;
-	// m_ScreenHeight = (float)ClientHeight;
 	m_ScreenWidth = 1920;
 	m_ScreenHeight = 1080;
 
@@ -75,7 +68,7 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 
 	m_Texture = new CTexture(m_pD3DDevice);
 	m_Input = new CInput(hWnd, hInstance);
-	// m_Text = new CText(m_pD3DDevice, 20, 40); // use it later..
+	m_Text = new CText(m_pD3DDevice, 20, 40); // use it later..
 
 	return true;
 }
@@ -138,6 +131,12 @@ void GameFramework::InitGameData()
 		, m_Texture->GetTexture(4)
 		, 1920
 		, 500);
+
+	// settings
+	m_fGroundHeight = m_Player->getPosition().y;
+	m_Score = 0;
+	m_GameMode = 0; // don't use yet...
+
 }
 
 void GameFramework::ReleaseGameData()
@@ -222,6 +221,11 @@ void GameFramework::Render()
 
 		m_pD3DDevice->EndScene();
 	}
+
+	// draw Score
+	TCHAR szScore[50];
+	_stprintf_s(szScore, 50, _T("%d"), m_Score);
+	m_Text->DrawRT(1700, 50, 150, 100, szScore);
 }
 
 void GameFramework::JumpUpdate(float dt)
@@ -234,13 +238,11 @@ void GameFramework::JumpUpdate(float dt)
 			m_Jump = true;
 			m_Jump2 = false;
 			m_JumpTime = 0.f;
-			m_fJumpPower = 15.f;
-			m_fBaseHeight = pcPos.y;
 			m_PrevHeight = pcPos.y;
+			m_Score += 100;
 		}
 		else if (m_JumpFalling == true && m_Jump2 == false)
 		{
-			m_fJumpPower = 15.f;
 			m_JumpTime = 0.f;
 			m_Jump2 = true;
 		}
@@ -249,19 +251,19 @@ void GameFramework::JumpUpdate(float dt)
 	if (m_Jump == true)
 	{
 		m_JumpTime += (dt*4.f);
-		float height = m_fJumpPower + (-4.9f*(m_JumpTime*m_JumpTime));
-
+		float height = 15.f + (-4.9f*(m_JumpTime*m_JumpTime));
+		// jumpPower + (gravity * (jumpTime)^2);
 		pcPos.y -= height;
 		m_JumpFalling = (pcPos.y - m_PrevHeight < 0.f) ? false : true;
 		// check is falling
 
 		// is lower than ground?
-		if (pcPos.y > m_fBaseHeight)
+		if (pcPos.y > m_fGroundHeight)
 		{
-			pcPos.y = m_fBaseHeight;
+			pcPos.y = m_fGroundHeight;
 			m_Jump = false;
 		}
-		m_PrevHeight = pcPos.y;
+		m_PrevHeight = pcPos.y; // insert the height of 
 		m_Player->setPosition(pcPos);
 	}
 }

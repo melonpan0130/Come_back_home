@@ -43,5 +43,5 @@ void CText::DrawRT(int x, int y, int width, int height, const TCHAR * lpszText, 
 {
 	RECT rc;
 	SetRect(&rc, x, y, x + width, y + height);
-	m_pFont->DrawTextW(NULL, lpszText, -1, &rc, DT_RIGHT | DT_TOP, color);
+	m_pFont->DrawTextW(NULL, lpszText, -1, &rc, DT_LEFT| DT_TOP, color);
 }

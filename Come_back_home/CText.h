@@ -10,7 +10,7 @@ public:
 		, D3DCOLOR color = D3DCOLOR_XRGB(255, 0,0));
 
 	void DrawRT(int x, int y, int width, int height, const TCHAR* lpszText
-		, D3DCOLOR color = D3DCOLOR_XRGB(255, 0, 0));
+		, D3DCOLOR color = D3DCOLOR_XRGB(255, 255, 255));
 
 protected:
 	LPD3DXFONT m_pFont;
