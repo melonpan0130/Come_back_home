@@ -61,8 +61,8 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
 	d3dpp.BackBufferCount = 1;
-	d3dpp.BackBufferWidth = ClientWidth;
-	d3dpp.BackBufferHeight = ClientHeight;
+	d3dpp.BackBufferWidth = 1920;
+	d3dpp.BackBufferHeight = 1080;
 
 	if (m_pD3D->CreateDevice(D3DADAPTER_DEFAULT
 		, D3DDEVTYPE_HAL
@@ -98,6 +98,10 @@ void GameFramework::ReleaseFramework()
 void GameFramework::LoadTexture()
 {
 	m_Texture->LoadTexture(TEXT("../img/pc.png"));
+	m_Texture->LoadTexture(TEXT("../img/stage1/sky.png"));
+	m_Texture->LoadTexture(TEXT("../img/stage1/moon.png"));
+	m_Texture->LoadTexture(TEXT("../img/stage1/mountain.png"));
+	m_Texture->LoadTexture(TEXT("../img/stage1/ground.png"));
 }
 
 void GameFramework::InitGameData()
@@ -110,8 +114,31 @@ void GameFramework::InitGameData()
 		, D3DXVECTOR3(0, 0, 0)
 		, 100);
 
+	// background
+
+	// sky
+	m_Background[0] = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(1)
+		, 1920
+		, 10);
 	
-	
+	// moon
+	m_Background[1] = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(2)
+		, 1920
+		, 5);
+
+	// mountain
+	m_Background[2] = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(3)
+		, 1920
+		, 50);
+
+	// ground
+	m_Background[3] = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(4)
+		, 1920
+		, 500);
 }
 
 void GameFramework::ReleaseGameData()
@@ -177,6 +204,9 @@ void GameFramework::Update(float dt)
 	// background update
 	// jump update
 	// ...
+
+	for (int i = 0; i < 4; i++)
+		m_Background[i]->Update(dt);
 	
 }
 
@@ -185,6 +215,9 @@ void GameFramework::Render()
 	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
 	{
 		// background render
+		for (int i = 0; i < 4; i++)
+			m_Background[i]->Render();
+
 		m_Player->Render();
 
 		m_pD3DDevice->EndScene();
