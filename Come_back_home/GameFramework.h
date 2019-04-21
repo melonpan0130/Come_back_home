@@ -28,7 +28,7 @@ public:
 	void Update(float dt);
 	void Render();
 
-	void JumpUpdate();
+	void JumpUpdate(float dt);
 
 protected:
 	LPDIRECT3D9 m_pD3D;
@@ -51,5 +51,14 @@ protected:
 	CGameObject* m_Invader;
 
 	CBackground* m_Background[4]; // background
+
+	// player Jump
+	bool m_Jump; // is jumping?
+	bool m_Jump2; // is jumping second?
+	bool m_JumpFalling; // is falling?
+	float m_fJumpPower; // first jump: 12, second jump: 8
+	float m_fBaseHeight; // ground height
+	float m_PrevHeight; // check previous height for know is falling
+	float m_JumpTime; // Jump Time
 };
 

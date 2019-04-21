@@ -74,7 +74,7 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 	srand((unsigned int)time(NULL));
 
 	m_Texture = new CTexture(m_pD3DDevice);
-	// m_Input = new CInput(hWnd, hInstance);
+	m_Input = new CInput(hWnd, hInstance);
 	// m_Text = new CText(m_pD3DDevice, 20, 40); // use it later..
 
 	return true;
@@ -111,11 +111,10 @@ void GameFramework::InitGameData()
 	m_Player = new CGameObject(m_pD3DDevice
 		, m_Texture->GetTexture(0)
 		, D3DXVECTOR3(66, 72, 0)
-		, D3DXVECTOR3(0, 0, 0)
-		, 100);
+		, D3DXVECTOR3(100, 850, 0)
+		, 300);
 
-	// background
-
+	// * background *
 	// sky
 	m_Background[0] = new CBackground(m_pD3DDevice
 		, m_Texture->GetTexture(1)
@@ -151,17 +150,17 @@ void GameFramework::ReleaseGameData()
 
 void GameFramework::GameUpdate(UINT & escapecode)
 {
-	if (false)//m_Input->IsEscapePressed())
+	if (m_Input->IsEscapePressed())
 	{
 		escapecode = WM_QUIT;
 		return;
 	}
 	else 
 	{
-//		m_Input->ReadKeyboard();
+		m_Input->ReadKeyboard();
 
-//		if (m_Input->IsPressed(DIK_F10))
-//			m_Pause = !m_Pause;
+		if (m_Input->IsPressed(DIK_F10))
+			m_Pause = !m_Pause;
 
 		DWORD dwCurTime = GetTickCount();
 		DWORD dwDt = dwCurTime - m_dwPrevTime;
@@ -170,8 +169,8 @@ void GameFramework::GameUpdate(UINT & escapecode)
 
 		if (m_Pause == false)
 		{
-			// รั น฿ป็
 			Update(fDt);
+			// รั น฿ป็ update ..
 		}
 	}
 }
@@ -197,14 +196,15 @@ void GameFramework::GameRender()
 void GameFramework::Update(float dt)
 {
 	D3DXVECTOR3 pcDir(0.f, 0.f, 0.f);
-//	m_Input->GetArrowDIr(pcDir);
+	m_Input->GetArrowDIr(pcDir);
 
 	m_Player->setDirection(pcDir.x, pcDir.y);
 	m_Player->Update(dt);
-	// background update
 	// jump update
 	// ...
+	JumpUpdate(dt);
 
+	// background update
 	for (int i = 0; i < 4; i++)
 		m_Background[i]->Update(dt);
 	
@@ -221,5 +221,47 @@ void GameFramework::Render()
 		m_Player->Render();
 
 		m_pD3DDevice->EndScene();
+	}
+}
+
+void GameFramework::JumpUpdate(float dt)
+{
+	D3DXVECTOR3 pcPos = m_Player->getPosition();
+	if (m_Input->IsPressed(DIK_UPARROW))
+	{
+		if (m_Jump == false)
+		{
+			m_Jump = true;
+			m_Jump2 = false;
+			m_JumpTime = 0.f;
+			m_fJumpPower = 15.f;
+			m_fBaseHeight = pcPos.y;
+			m_PrevHeight = pcPos.y;
+		}
+		else if (m_JumpFalling == true && m_Jump2 == false)
+		{
+			m_fJumpPower = 15.f;
+			m_JumpTime = 0.f;
+			m_Jump2 = true;
+		}
+	}
+
+	if (m_Jump == true)
+	{
+		m_JumpTime += (dt*4.f);
+		float height = m_fJumpPower + (-4.9f*(m_JumpTime*m_JumpTime));
+
+		pcPos.y -= height;
+		m_JumpFalling = (pcPos.y - m_PrevHeight < 0.f) ? false : true;
+		// check is falling
+
+		// is lower than ground?
+		if (pcPos.y > m_fBaseHeight)
+		{
+			pcPos.y = m_fBaseHeight;
+			m_Jump = false;
+		}
+		m_PrevHeight = pcPos.y;
+		m_Player->setPosition(pcPos);
 	}
 }
