@@ -62,8 +62,10 @@ void CGameObject::Update(float dt)
 
 void CGameObject::Render()
 {
-	m_Spr->setPosition(m_Pos);
-	m_Spr->Draw();
+	if (m_Alive) {
+		m_Spr->setPosition(m_Pos);
+		m_Spr->Draw();
+	}
 }
 
 void CGameObject::ArrangePosition(float sx, float ex)

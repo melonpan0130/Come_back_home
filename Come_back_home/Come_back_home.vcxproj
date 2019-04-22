@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -155,6 +155,8 @@
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CInput.h" />
     <ClInclude Include="Come_back_home.h" />
+    <ClInclude Include="CPayload.h" />
+    <ClInclude Include="CPayloadManager.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="CText.h" />
     <ClInclude Include="CTexture.h" />
@@ -168,6 +170,8 @@
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CInput.cpp" />
     <ClCompile Include="Come_back_home.cpp" />
+    <ClCompile Include="CPayload.cpp" />
+    <ClCompile Include="CPayloadManager.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="CText.cpp" />
     <ClCompile Include="CTexture.cpp" />

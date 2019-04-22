@@ -20,8 +20,6 @@ CInput::~CInput()
 
 int CInput::InitInput(HWND hWnd, HINSTANCE hInstance)
 {
-	m_lpDInput;
-	m_lpKeyboard;
 	try {
 		auto result = DirectInput8Create(hInstance
 			, DIRECTINPUT_VERSION
