@@ -17,6 +17,8 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
+float m_TrapTimerGap[5] = { 800.f, 1200.f,1600.f, 2000.f, 2400.f };
+
 GameFramework::GameFramework()
 {
 	m_pD3D = NULL;
@@ -222,7 +224,7 @@ void GameFramework::InitGameData()
 		, D3DXVECTOR3(50.f, 50.f, 0)
 		, 400
 		, D3DXVECTOR3(0.f, 1.f, 0.f)
-		, D3DXVECTOR2(m_ScreenWidth, m_ScreenHeight));
+		, D3DXVECTOR2(m_ScreenWidth, 840));
 
 	m_TrapPM = new CPayloadManager(m_pD3DDevice
 		, m_Texture->GetTexture(13)
@@ -235,7 +237,7 @@ void GameFramework::InitGameData()
 	m_fGroundHeight = m_Player->getPosition().y;
 	m_Score = 0;
 	m_GameMode = 0; // don't use yet...
-
+	m_TrapGap = m_TrapTimerGap[rand() % 5];
 }
 
 void GameFramework::ReleaseGameData()
@@ -281,8 +283,6 @@ void GameFramework::GameUpdate(UINT & escapecode)
 		if (m_Pause == false)
 		{
 			Update(fDt);
-			if (m_Input->IsPressed(DIK_SPACE))
-				m_PlayerPM->OnFire(m_Player->getPosition());
 			// 총 발사 update ..
 		}
 	}
@@ -315,7 +315,6 @@ void GameFramework::Update(float dt)
 	m_Player->setDirection(pcDir.x, pcDir.y);
 	m_Player->ArrangePosition(66.f, m_ScreenWidth - 66.f); // limit moving
 	m_Player->Update(dt);
-	
 
 	m_Invader->setDirection(m_InvaderDir.x, m_InvaderDir.y);
 	m_Invader->Update(dt);
@@ -325,7 +324,7 @@ void GameFramework::Update(float dt)
 		m_InvaderDir = D3DXVECTOR3((m_InvaderRightDir ? -1.f : 1.f), 0.f, 0.f);
 		m_InvaderRightDir = !m_InvaderRightDir;
 	}
-
+	
 	PayloadUpdate(dt); // fire payload
 	InvaderCollision(dt); // is invader collisioned?
 	PlayerCollision(dt); // is player collisioned?
@@ -373,7 +372,7 @@ void GameFramework::Render()
 	// draw Score
 	TCHAR szScore[50];
 	_stprintf_s(szScore, 50, _T("%d"), m_Score);
-	m_Text->DrawRT(1700, 50, 150, 100, szScore);
+	m_Text->DrawRT(1750, 45, 150, 100, szScore);
 }
 
 void GameFramework::PayloadUpdate(float dt)
@@ -382,21 +381,32 @@ void GameFramework::PayloadUpdate(float dt)
 	m_InvaderPM->Update(dt);
 	m_TrapPM->Update(dt);
 
-	// invader가 초당 한번씩 쏘게 하기
-	int delta_time = GetTickCount() - m_InvaderShootTimer;
-	int delta_time_trap = GetTickCount() - m_TrapShootTimer;
+	if (m_Input->IsPressed(DIK_W))
+		m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.f, -1.f, 0.f));
+	if (m_Input->IsPressed(DIK_D))
+		m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(1.f, 0.f, 0.f));
+	if (m_Input->IsPressed(DIK_A))
+		m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-1.f, 0.f, 0.f));
 
-	if (delta_time > 5000) // level에 따라서 변화주기
+	// invader가 초당 한번씩 쏘게 하기
+	// make invader one shoot in one seconds
+	int delta_time = GetTickCount() - m_InvaderShootTimer;
+	int trap_time = GetTickCount() - m_TrapShootTimer;
+
+	// after -> make a level value, and make delta_time faster.
+	if (delta_time > 3000)
 	{
 		m_InvaderShootTimer = GetTickCount();
 		if (m_Invader->getAlive())
 			m_InvaderPM->OnFire(m_Invader->getPosition());
 	}
-
-	if (delta_time_trap > 1000) // 1000 -> random, but over than 1000
+	
+	if (trap_time > m_TrapGap)
 	{	
+		m_TrapGap = m_TrapTimerGap[rand() % 5];
 		m_TrapShootTimer = GetTickCount();
 		m_TrapPM->OnFire(D3DXVECTOR3(m_ScreenWidth+86.5, 900.f, 0.f));
+		
 	}
 }
 
@@ -409,10 +419,11 @@ void GameFramework::InvaderCollision(float dt)
 	}
 }
 
+// is player collisioned???
 void GameFramework::PlayerCollision(float dt)
 {
 	if (m_Player->getAlive() &&
-		m_InvaderPM->IsCollision(m_Player->getPosition(), (66 + 50)))
+		(m_InvaderPM->IsCollision(m_Player->getPosition(), (66 + 50))) )
 	{
 		// lose one life
 		if (m_Life[0]->getAlive())
@@ -421,7 +432,16 @@ void GameFramework::PlayerCollision(float dt)
 			m_Life[1]->setAlive(false);
 		else if (m_Life[2]->getAlive())
 			m_Life[2]->setAlive(false);
-		else ;// gamemode = "gameover"
+		else {
+			// m_Player.setAlive(false);
+			// gamemode = "gameover"
+		}
+		m_Score -= 200;
+	}
+
+	if (m_Player->getAlive() &&
+		m_TrapPM->IsCollision(m_Player->getPosition(), (66 + 86.5)))
+	{
 		m_Score -= 100;
 	}
 }

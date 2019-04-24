@@ -97,7 +97,7 @@ bool CInput::IsPressed(int key)
 	DWORD dwCurtime = GetTickCount();
 	int dt = dwCurtime - dwPrevTime;
 
-	if ((dt > 500) && (m_keyboardState[key] & 0x80))
+	if ((dt > 100) && (m_keyboardState[key] & 0x80))
 	{
 		m_keyboardState[key] = 0;
 		dwPrevTime = dwCurtime;

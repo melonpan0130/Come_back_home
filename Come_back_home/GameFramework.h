@@ -31,6 +31,7 @@ public:
 	void PayloadUpdate(float dt);
 	void InvaderCollision(float dt); // is invader collisioned?
 	void PlayerCollision(float dt); // is player collisioned?
+	//void TrapCollision(float dt);
 
 	void JumpUpdate(float dt);
 
@@ -75,6 +76,7 @@ protected:
 	bool m_InvaderRightDir;
 
 	float m_TrapShootTimer;
+	float m_TrapGap;
 
 	// player Jump
 	bool m_Jump; // is jumping?

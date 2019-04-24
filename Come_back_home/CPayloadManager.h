@@ -22,6 +22,8 @@ public:
 	void OnFire(const D3DXVECTOR3& pos, const D3DXVECTOR3& dir);
 
 	bool IsCollision(const D3DXVECTOR3& pos, float radious);
+	
+	
 
 protected:
 	CPayload* m_Payload[PAYLOAD_MAX];
