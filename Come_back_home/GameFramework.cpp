@@ -34,6 +34,11 @@ GameFramework::GameFramework()
 	m_Pause = false;
 	m_dwPrevTime = 0;
 	m_InvaderShootTimer = 0;
+
+	m_Score = 0;
+	m_GameMode = 0; // don't use yet...
+	m_TrapGap = m_TrapTimerGap[rand() % 5];
+	m_InvaderCount = 0;
 }
 
 
@@ -127,8 +132,9 @@ void GameFramework::LoadTexture()
 	m_Texture->LoadTexture(TEXT("../img/score/life_final.png")); // 9
 	m_Texture->LoadTexture(TEXT("../img/payload.png")); // 10
 	m_Texture->LoadTexture(TEXT("../img/stage1/invader1.png")); // 11
-	m_Texture->LoadTexture(TEXT("../img/stage1/invaderPayload.png")); // 12
-	m_Texture->LoadTexture(TEXT("../img/stage1/trap1.png")); // 13
+	m_Texture->LoadTexture(TEXT("../img/stage1/invader2.png")); // 12
+	m_Texture->LoadTexture(TEXT("../img/stage1/invaderPayload.png")); // 13
+	m_Texture->LoadTexture(TEXT("../img/stage1/trap1.png")); // 14
 }
 
 void GameFramework::InitGameData()
@@ -220,14 +226,14 @@ void GameFramework::InitGameData()
 		, D3DXVECTOR2(m_ScreenWidth, m_ScreenHeight));
 
 	m_InvaderPM = new CPayloadManager(m_pD3DDevice
-		, m_Texture->GetTexture(12)
+		, m_Texture->GetTexture(13)
 		, D3DXVECTOR3(50.f, 50.f, 0)
 		, 400
 		, D3DXVECTOR3(0.f, 1.f, 0.f)
 		, D3DXVECTOR2(m_ScreenWidth, 840));
 
 	m_TrapPM = new CPayloadManager(m_pD3DDevice
-		, m_Texture->GetTexture(13)
+		, m_Texture->GetTexture(14)
 		, D3DXVECTOR3(86.5f, 86.5f, 0.f)
 		, 500
 		, D3DXVECTOR3(-1.f, 0.f, 0.f)
@@ -235,9 +241,7 @@ void GameFramework::InitGameData()
 
 	// settings
 	m_fGroundHeight = m_Player->getPosition().y;
-	m_Score = 0;
-	m_GameMode = 0; // don't use yet...
-	m_TrapGap = m_TrapTimerGap[rand() % 5];
+	
 }
 
 void GameFramework::ReleaseGameData()
@@ -373,6 +377,10 @@ void GameFramework::Render()
 	TCHAR szScore[50];
 	_stprintf_s(szScore, 50, _T("%d"), m_Score);
 	m_Text->DrawRT(1750, 45, 150, 100, szScore);
+
+	TCHAR szTest[50];
+	_stprintf_s(szTest, 50, _T("invader count : %d"), m_InvaderCount);
+	m_Text->Draw(0, 0, 350, 100, szTest);
 }
 
 void GameFramework::PayloadUpdate(float dt)
@@ -403,20 +411,46 @@ void GameFramework::PayloadUpdate(float dt)
 	
 	if (trap_time > m_TrapGap)
 	{	
-		m_TrapGap = m_TrapTimerGap[rand() % 5];
+		m_TrapGap = m_TrapTimerGap[rand() % 5]; // random
 		m_TrapShootTimer = GetTickCount();
-		m_TrapPM->OnFire(D3DXVECTOR3(m_ScreenWidth+86.5, 900.f, 0.f));
-		
+		m_TrapPM->OnFire(D3DXVECTOR3(m_ScreenWidth+86.5, 900.f, 0.f));	
 	}
 }
 
 void GameFramework::InvaderCollision(float dt)
 {
+	// invader collisioned?
 	if (m_Invader->getAlive() &&
 		m_PlayerPM->IsCollision(m_Invader->getPosition(), (150.f + 35.f)))
 	{
-		m_Score += 100;
+		m_Score += 200;
+		m_InvaderCount += 1;
 	}
+
+	if (m_InvaderCount > 20)
+	{
+		// get out, and appear new invader
+		m_Invader->setTexture(m_Texture->GetTexture(12));
+		
+	}
+
+	// invaderPM collisioned?
+	for(int i=0;i<9;i++)
+		if (m_InvaderPM->getAlive(i) &&
+			m_PlayerPM->IsCollision(m_InvaderPM->getPos(i), (50.f + 35.f)))
+		{
+			m_Score += 100;
+			m_InvaderPM->setAlive(i, false);
+		}
+
+	// trap collisioned?
+	for(int i=0; i<9; i++)
+		if (m_TrapPM->getAlive(i) &&
+			m_PlayerPM->IsCollision(m_TrapPM->getPos(i), (86.5 + 35.f)))
+		{
+			m_Score += 100;
+			m_TrapPM->setAlive(i, false);
+		}
 }
 
 // is player collisioned???

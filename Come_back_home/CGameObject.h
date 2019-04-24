@@ -31,6 +31,9 @@ public:
 
 	void setAlive(bool flag) { m_Alive = flag; }
 	bool getAlive() { return m_Alive; }
+
+	void setTexture(LPDIRECT3DTEXTURE9 pTexture);
+
 protected:
 	CSprite* m_Spr;
 	D3DXVECTOR3 m_Pos;

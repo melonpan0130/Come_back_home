@@ -13,6 +13,7 @@ public:
 	virtual ~CPayload();
 
 	bool IsAlive() const { return m_Alive; }
+	bool GetAlive() { return m_Alive; }
 	void SetAlive(bool flag) { m_Alive = flag; }
 
 	const D3DXVECTOR3& GetPos() { return m_Pos; }

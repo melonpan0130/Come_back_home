@@ -23,7 +23,9 @@ public:
 
 	bool IsCollision(const D3DXVECTOR3& pos, float radious);
 	
-	
+	const D3DXVECTOR3& getPos(int slot) const;
+	bool getAlive(int slot);
+	void setAlive(int slot, bool flag);
 
 protected:
 	CPayload* m_Payload[PAYLOAD_MAX];

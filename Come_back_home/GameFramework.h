@@ -72,8 +72,9 @@ protected:
 
 	D3DXVECTOR3 m_InvaderPos;
 	D3DXVECTOR3 m_InvaderDir;
-	float m_InvaderShootTimer; // invader shoot timer
-	bool m_InvaderRightDir;
+	float m_InvaderShootTimer; // Invader shoot timer
+	bool m_InvaderRightDir; // Is invader going right?
+	int m_InvaderCount; // How much damage to invader?
 
 	float m_TrapShootTimer;
 	float m_TrapGap;

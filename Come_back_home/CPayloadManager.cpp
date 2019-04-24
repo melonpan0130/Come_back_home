@@ -72,3 +72,20 @@ bool CPayloadManager::IsCollision(const D3DXVECTOR3 & pos, float radious)
 		}
 	return false;
 }
+
+const D3DXVECTOR3 & CPayloadManager::getPos(int slot) const
+{
+	return m_Payload[slot]->GetPos();
+}
+
+bool CPayloadManager::getAlive(int slot)
+{
+	if (m_Payload[slot]->GetAlive())
+		return true;
+	return false;
+}
+
+void CPayloadManager::setAlive(int slot, bool flag)
+{
+	m_Payload[slot]->SetAlive(flag);
+}
