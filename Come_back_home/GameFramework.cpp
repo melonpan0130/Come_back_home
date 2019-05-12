@@ -341,10 +341,12 @@ void GameFramework::GameUpdate(UINT & escapecode)
 
 		if (m_Input->IsPressed(DIK_F10))
 			m_Pause = !m_Pause;
-
+		
 		DWORD dwCurTime = GetTickCount();
 		DWORD dwDt = dwCurTime - m_dwPrevTime;
+		DWORD dwPt = dwCurTime - m_dwStartTime;
 		float fDt = (float)(dwDt)*0.001f;
+		m_fTotalTime = (float)(dwPt)*0.001f;
 		m_dwPrevTime = dwCurTime;
 
 		if (m_Pause == false)
@@ -356,8 +358,12 @@ void GameFramework::GameUpdate(UINT & escapecode)
 			case 1: case 2: case 3: case 4: case 5:
 				TitleUpdate(fDt, m_GameMode);
 				break; 
+			case 9: // ready
+				ReadyUpdate(fDt);
+				break;
 			case 10: // play game
 				Update(fDt);
+				break;
 			}
 			// รั น฿ป็ update ..
 		}
@@ -374,20 +380,26 @@ void GameFramework::GameRender()
 		, D3DCLEAR_TARGET
 		, D3DCOLOR_XRGB(0, 0, 0)
 		, 1.0f, 0);
+	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
+	{
+		
+		switch (m_GameMode) {
+		case 0:
+			TitleRender();
+			break;
+		case 1: case 2: case 3: case 4: case 5:
+			TitleRender(m_GameMode);
+			break;
+		case 9:// ready
+			ReadyRender();
+			break;
+		case 10:
+			Render();
+			m_Invader->Render();
+			break;
+		}
 
-	switch (m_GameMode) {
-	case 0:
-		TitleRender();
-		break;
-	case 1: case 2: case 3: case 4: case 5:
-		TitleRender(m_GameMode);
-		break;
-	case 9:// ready
-		break;
-	case 10:
-		Render();
-		m_Invader->Render();
-		break;
+		m_pD3DDevice->EndScene();
 	}
 
 	// send backbuffer
@@ -418,7 +430,8 @@ void GameFramework::TitleUpdate(float dt)
 		switch (m_TitleMode)
 		{
 		case 0:
-			m_GameMode = 10;
+			m_dwStartTime = GetTickCount();
+			m_GameMode = 9;
 			break;
 		case 1: 
 			m_GameMode = m_TitleMode;
@@ -431,15 +444,12 @@ void GameFramework::TitleUpdate(float dt)
 
 void GameFramework::TitleRender()
 {
-	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
-	{
-		for (int i = 0; i < 6; i++)
-			m_Title[i]->Render();
+	for (int i = 0; i < 6; i++)
+		m_Title[i]->Render();
 
-		m_TitleArrow->Render();
+	m_TitleArrow->Render();
 
-		m_pD3DDevice->EndScene();
-	}
+	m_pD3DDevice->EndScene();
 
 	// mysql; be use database later...
 	/*
@@ -464,12 +474,9 @@ void GameFramework::TitleUpdate(float dt, int mode)
 
 void GameFramework::TitleRender(int mode)
 {
-	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
-	{
-		m_Title[mode + 5]->Render();
+	m_Title[mode + 5]->Render();
 
-		m_pD3DDevice->EndScene();
-	}
+	m_pD3DDevice->EndScene();
 
 	TCHAR szTitleMode[50];
 	_stprintf_s(szTitleMode, 50, _T("%d"), mode);
@@ -478,18 +485,17 @@ void GameFramework::TitleRender(int mode)
 
 void GameFramework::ReadyUpdate(float dt)
 {
-
+	int ready_time = GetTickCount() - m_dwStartTime;
+	if (ready_time > 2000) {
+		m_GameMode = 10;
+	}
 	m_Ready->Update(dt);
 }
 
 void GameFramework::ReadyRender()
 {
-	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
-	{
-		m_Ready->Render();
-
-		m_pD3DDevice->EndScene();
-	}
+	Render();
+	m_Ready->Render();
 }
 
 void GameFramework::Update(float dt)
@@ -529,30 +535,25 @@ void GameFramework::Update(float dt)
 
 void GameFramework::Render()
 {
-	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
-	{
-		// render background
-		for (int i = 0; i < 4; i++)
-			m_Background[i]->Render();
+	// render background
+	for (int i = 0; i < 4; i++)
+		m_Background[i]->Render();
 
-		// render bar
-		for (int i = 0; i < 2; i++)
-			m_Bar[i]->Render();
+	// render bar
+	for (int i = 0; i < 2; i++)
+		m_Bar[i]->Render();
 
-		for (int i = 0; i < 3; i++)
-			m_Life[i]->Render();
+	for (int i = 0; i < 3; i++)
+		m_Life[i]->Render();
 		
-		// render player
-		m_Player->Render();
-		m_Invader->Render();
+	// render player
+	m_Player->Render();
+	m_Invader->Render();
 
-		// payload
-		m_PlayerPM->Draw();
-		m_InvaderPM->Draw();
-		m_TrapPM->Draw();
-
-		m_pD3DDevice->EndScene();
-	}
+	// payload
+	m_PlayerPM->Draw();
+	m_InvaderPM->Draw();
+	m_TrapPM->Draw();
 
 	// draw Score
 	TCHAR szScore[50];

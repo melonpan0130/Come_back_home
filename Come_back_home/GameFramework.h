@@ -73,7 +73,8 @@ protected:
 	// settings
 	bool m_Pause;
 	DWORD m_dwPrevTime; // how much times passed
-	DWORD m_dwTotalTime; // play time
+	DWORD m_dwStartTime; // start playing
+	float m_fTotalTime; // play time
 
 	int m_GameMode; // gameMode
 	int m_Score; // score
