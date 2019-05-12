@@ -1,0 +1,12 @@
+﻿  GameFramework.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\come_back_home\come_back_home\gameframework.cpp(289): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(557): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(558): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(563): warning C4244: '=': 'DWORD'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(571): warning C4244: '=': 'DWORD'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(572): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다.
+  All 117 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  코드를 생성했습니다.
+  Come_back_home.vcxproj -> D:\Come_back_home\Release\Come_back_home.exe

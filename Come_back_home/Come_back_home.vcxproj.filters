@@ -48,6 +48,12 @@
     <ClInclude Include="CBackground.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="CPayload.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CPayloadManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -75,6 +81,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CBackground.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CPayload.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CPayloadManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

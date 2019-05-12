@@ -2,6 +2,7 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <time.h>
+#include <math.h>
 #include "CText.h"
 #include "CInput.h"
 #include "CTexture.h"
@@ -17,7 +18,13 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
+// use mysql
+#include <WinSock2.h>
+#include <mysql.h>
+#pragma comment(lib, "libmysql.lib")
+
 float m_TrapTimerGap[5] = { 800.f, 1200.f,1600.f, 2000.f, 2400.f };
+D3DXVECTOR3 ArrowPos[5] = { D3DXVECTOR3(750.f, 550.f, 0), D3DXVECTOR3(500.f, 750.f, 0), D3DXVECTOR3(1000.f, 750.f, 0), D3DXVECTOR3(500.f, 925.f, 0), D3DXVECTOR3(1000.f, 925.f, 0) };
 
 GameFramework::GameFramework()
 {
@@ -37,10 +44,10 @@ GameFramework::GameFramework()
 
 	m_Score = 0;
 	m_GameMode = 0; // don't use yet...
+	m_TitleMode = 0;
 	m_TrapGap = m_TrapTimerGap[rand() % 5];
 	m_InvaderCount = 0;
 }
-
 
 GameFramework::~GameFramework()
 {
@@ -84,6 +91,12 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 
 	m_InvaderDir = D3DXVECTOR3(1, 0, 0); // invader direction
 
+	// title
+	m_TitleArrow = NULL;
+	for(int i=0; i<5; i++)
+		m_Title[i] = NULL;
+
+
 	// background
 	for (int i = 0; i < 4; i++)
 		m_Background[i] = NULL;
@@ -99,7 +112,12 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 	m_PlayerPM = NULL;
 	m_InvaderPM = NULL;
 	m_TrapPM = NULL;
-
+	/*
+	mysql_init(&m_MySql);
+	// if (!mysql_real_connect(&m_MySql, NULL , "root", "1234", "NULL/mysql/", 3306, NULL, 0))
+		// throw 4L;
+	mysql_close(&m_MySql);
+	*/
 	return true;
 }
 
@@ -135,6 +153,23 @@ void GameFramework::LoadTexture()
 	m_Texture->LoadTexture(TEXT("../img/stage1/invader2.png")); // 12
 	m_Texture->LoadTexture(TEXT("../img/stage1/invaderPayload.png")); // 13
 	m_Texture->LoadTexture(TEXT("../img/stage1/trap1.png")); // 14
+	m_Texture->LoadTexture(TEXT("../img/title/arrow.png")); // 15
+	m_Texture->LoadTexture(TEXT("../img/title/main.png")); // 16
+	
+	// be deleted....
+	m_Texture->LoadTexture(TEXT("../img/title/t1.png")); // 17
+	m_Texture->LoadTexture(TEXT("../img/title/t2.png")); // 18
+	m_Texture->LoadTexture(TEXT("../img/title/t3.png")); // 19
+	m_Texture->LoadTexture(TEXT("../img/title/t4.png")); // 20
+	m_Texture->LoadTexture(TEXT("../img/title/t5.png")); // 21
+	m_Texture->LoadTexture(TEXT("../img/title/how_to.png")); // 22
+	m_Texture->LoadTexture(TEXT("../img/title/how_to2.png")); // 23
+	m_Texture->LoadTexture(TEXT("../img/title/info.png")); //24
+	m_Texture->LoadTexture(TEXT("../img/title/score.png")); // 25
+	m_Texture->LoadTexture(TEXT("../img/title/credit.png")); // 26
+	
+	m_Texture->LoadTexture(TEXT("../img/stage1/ready.png")); // 27
+	
 }
 
 void GameFramework::InitGameData()
@@ -157,6 +192,27 @@ void GameFramework::InitGameData()
 		, D3DXVECTOR3(150, 350, 0)
 		, 300);
 	m_Invader->setAlive(true);
+
+	// * title *
+	// arrow
+	m_TitleArrow = new CGameObject(m_pD3DDevice
+		, m_Texture->GetTexture(15)
+		, D3DXVECTOR3(73, 73, 0)
+		, ArrowPos[0]
+		, 0);
+	m_TitleArrow->setAlive(true);
+
+	// main title
+	for(int i=0; i<11; i++)
+	m_Title[i] = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(i+16)
+		, 1920
+		, 0);
+
+	m_Ready = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(27)
+		, 1920
+		, 0);
 
 	// * background *
 	// sky
@@ -241,6 +297,8 @@ void GameFramework::InitGameData()
 
 	// settings
 	m_fGroundHeight = m_Player->getPosition().y;
+
+	
 	
 }
 
@@ -253,7 +311,12 @@ void GameFramework::ReleaseGameData()
 	// delete Background
 	for (int i = 0; i < 3; i++)
 		delete m_Background[i];
+
+	for (int i = 0; i < 10; i++)
+		delete m_Title[i];
 	
+	m_TitleArrow = NULL;
+
 	m_TrapPM = NULL;
 	m_PlayerPM = NULL;
 	m_InvaderPM = NULL;
@@ -286,7 +349,16 @@ void GameFramework::GameUpdate(UINT & escapecode)
 
 		if (m_Pause == false)
 		{
-			Update(fDt);
+			switch (m_GameMode) {
+			case 0:
+				TitleUpdate(fDt);
+				break;
+			case 1: case 2: case 3: case 4: case 5:
+				TitleUpdate(fDt, m_GameMode);
+				break; 
+			case 10: // play game
+				Update(fDt);
+			}
 			// รั น฿ป็ update ..
 		}
 	}
@@ -294,7 +366,6 @@ void GameFramework::GameUpdate(UINT & escapecode)
 
 void GameFramework::GameRender()
 {
-
 	if (m_pD3DDevice == NULL)
 		return;
 
@@ -304,11 +375,121 @@ void GameFramework::GameRender()
 		, D3DCOLOR_XRGB(0, 0, 0)
 		, 1.0f, 0);
 
-	Render();
-	m_Invader->Render();
+	switch (m_GameMode) {
+	case 0:
+		TitleRender();
+		break;
+	case 1: case 2: case 3: case 4: case 5:
+		TitleRender(m_GameMode);
+		break;
+	case 9:// ready
+		break;
+	case 10:
+		Render();
+		m_Invader->Render();
+		break;
+	}
 
 	// send backbuffer
 	m_pD3DDevice->Present(NULL, NULL, NULL, NULL);
+}
+
+void GameFramework::TitleUpdate(float dt)
+{
+	for(int i=0; i<6; i++)
+		m_Title[i]->Update(dt);
+	m_TitleArrow->Update(dt);
+
+	if (m_Input->IsPressed(DIK_DOWNARROW) || m_Input->IsPressed(DIK_RIGHTARROW))
+	{
+		if (m_TitleMode != 4)
+			m_TitleMode = (++m_TitleMode % 5);
+	}
+	else if (m_Input->IsPressed(DIK_UPARROW) || m_Input->IsPressed(DIK_LEFTARROW))
+	{
+		if (m_TitleMode != 0) {
+			m_TitleMode = (m_TitleMode-- % 5);
+		}
+	}
+	m_TitleArrow->setPosition(ArrowPos[m_TitleMode]);
+
+	if (m_Input->IsPressed(DIK_RETURN))
+	{
+		switch (m_TitleMode)
+		{
+		case 0:
+			m_GameMode = 10;
+			break;
+		case 1: 
+			m_GameMode = m_TitleMode;
+			break;
+		case 2: case 3: case 4:
+			m_GameMode = m_TitleMode + 1;
+		}
+	}
+}
+
+void GameFramework::TitleRender()
+{
+	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
+	{
+		for (int i = 0; i < 6; i++)
+			m_Title[i]->Render();
+
+		m_TitleArrow->Render();
+
+		m_pD3DDevice->EndScene();
+	}
+
+	// mysql; be use database later...
+	/*
+	TCHAR szSQL[50];
+	_stprintf_s(szSQL, 50, _T("%s"), mysql_get_client_info());
+	m_Text->Draw(100, 100, 350, 100, szSQL);
+	*/
+}
+
+void GameFramework::TitleUpdate(float dt, int mode)
+{
+	m_Title[mode + 5]->Update(dt);
+
+	if (mode == 1 && m_Input->IsPressed(DIK_TAB))
+		m_GameMode = 2;
+
+	if (m_Input->IsPressed(DIK_RETURN))
+	{
+		m_GameMode = 0;
+	}
+}
+
+void GameFramework::TitleRender(int mode)
+{
+	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
+	{
+		m_Title[mode + 5]->Render();
+
+		m_pD3DDevice->EndScene();
+	}
+
+	TCHAR szTitleMode[50];
+	_stprintf_s(szTitleMode, 50, _T("%d"), mode);
+	m_Text->Draw(100, 100, 350, 100, szTitleMode);
+}
+
+void GameFramework::ReadyUpdate(float dt)
+{
+
+	m_Ready->Update(dt);
+}
+
+void GameFramework::ReadyRender()
+{
+	if (SUCCEEDED(m_pD3DDevice->BeginScene()))
+	{
+		m_Ready->Render();
+
+		m_pD3DDevice->EndScene();
+	}
 }
 
 void GameFramework::Update(float dt)
@@ -431,7 +612,6 @@ void GameFramework::InvaderCollision(float dt)
 	{
 		// get out, and appear new invader
 		m_Invader->setTexture(m_Texture->GetTexture(12));
-		
 	}
 
 	// invaderPM collisioned?

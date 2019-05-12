@@ -1,4 +1,9 @@
 #pragma once
+
+#include <WinSock2.h>
+#include <mysql.h>
+#pragma comment(lib, "libmysql.lib")
+
 class CText;
 class CInput;
 class CTexture;
@@ -21,12 +26,27 @@ public:
 
 	void InitGameData();
 	void ReleaseGameData();
-	
+
 	void GameUpdate(UINT& escapecode);
 	void GameRender();
 
+	void TitleUpdate(float dt);
+	void TitleRender();
+
+	void TitleUpdate(float dt, int mode);
+	void TitleRender(int mode);
+
+	void IntroUpdate(float dt);
+	void IntroRender();
+
+	void ReadyUpdate(float dt);
+	void ReadyRender();
+
 	void Update(float dt);
 	void Render();
+
+	void OutroUpdate(float dt);
+	void OutroRender();
 
 	void PayloadUpdate(float dt);
 	void InvaderCollision(float dt); // is invader collisioned?
@@ -48,6 +68,8 @@ protected:
 	CTexture* m_Texture;
 	CInput* m_Input;
 
+	int m_TitleMode;
+
 	// settings
 	bool m_Pause;
 	DWORD m_dwPrevTime; // how much times passed
@@ -61,7 +83,11 @@ protected:
 	CGameObject* m_Player; // player
 	CGameObject* m_Invader; // invader
 	CGameObject* m_Life[3]; // life (3)
+	CGameObject* m_TitleArrow; // title arrow
 
+	// background; 
+	CBackground* m_Title[11]; // title background
+	CBackground* m_Ready;
 	CBackground* m_Background[4]; // background
 	CBackground* m_Bar[2]; // score Bar, life Bar
 	
@@ -70,12 +96,14 @@ protected:
 	CPayloadManager* m_InvaderPM;
 	CPayloadManager* m_TrapPM;
 
+	// invader
 	D3DXVECTOR3 m_InvaderPos;
 	D3DXVECTOR3 m_InvaderDir;
 	float m_InvaderShootTimer; // Invader shoot timer
 	bool m_InvaderRightDir; // Is invader going right?
 	int m_InvaderCount; // How much damage to invader?
 
+	// trap
 	float m_TrapShootTimer;
 	float m_TrapGap;
 
@@ -86,5 +114,6 @@ protected:
 	float m_fGroundHeight; // ground height
 	float m_PrevHeight; // check previous height for know is falling
 	float m_JumpTime; // Jump Time
-};
 
+	// MYSQL m_MySql;
+};
