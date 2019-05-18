@@ -12,9 +12,25 @@ CPayloadManager::CPayloadManager(LPDIRECT3DDEVICE9 pD3DDevice
 	, const D3DXVECTOR3 & dir
 	, const D3DXVECTOR2 & screensize)
 {
-	for (int i = 0; i < PAYLOAD_MAX; i++)
+	for (int i = 0; i < PAYLOAD_MAX; i++) {
 		m_Payload[i] = new CPayload(pD3DDevice
 			, texture, center, speed, dir, screensize);
+		m_Type[i] = -1;
+	}
+		
+}
+
+CPayloadManager::CPayloadManager(LPDIRECT3DDEVICE9 pD3DDevice, LPDIRECT3DTEXTURE9 texture1, LPDIRECT3DTEXTURE9 texture2, LPDIRECT3DTEXTURE9 texture3, const D3DXVECTOR3 & center, float speed, const D3DXVECTOR3 & dir, const D3DXVECTOR2 & screensize)
+{
+	for (int i = 0; i < PAYLOAD_MAX; i++) {
+		m_Payload[i] = new CPayload(pD3DDevice
+			, texture1, center, speed, dir, screensize);
+		m_Type[i] = -1;
+	}
+		
+	this->m_Texture[0] = texture1;
+	this->m_Texture[1] = texture2;
+	this->m_Texture[2] = texture3;
 }
 
 CPayloadManager::~CPayloadManager()
@@ -50,6 +66,18 @@ void CPayloadManager::OnFire(const D3DXVECTOR3 & pos)
 		m_Payload[id]->OnFire(pos);
 }
 
+void CPayloadManager::OnFire(const D3DXVECTOR3 & pos, int type)
+{
+	int id = getEmptyPayload();
+	m_Payload[id]->SetTexture(m_Texture[type]);
+	m_Type[id] = type;
+	if (id != -1) {
+		m_Payload[id]->SetTexture(m_Texture[type]);
+		m_Payload[id]->OnFire(pos);
+	}
+		
+}
+
 void CPayloadManager::OnFire(const D3DXVECTOR3 & pos
 	, const D3DXVECTOR3 & dir)
 {
@@ -58,19 +86,20 @@ void CPayloadManager::OnFire(const D3DXVECTOR3 & pos
 		m_Payload[id]->OnFire(pos, dir);
 }
 
-bool CPayloadManager::IsCollision(const D3DXVECTOR3 & pos, float radious)
+int CPayloadManager::IsCollision(const D3DXVECTOR3 & pos, float radious)
 {
 	for(int i=0; i<PAYLOAD_MAX; i++)
 		if (m_Payload[i]->IsAlive())
 		{
 			D3DXVECTOR3 dist = m_Payload[i]->GetPos() - pos;
 			if (D3DXVec3Length(&dist) < radious)
-			{
+			{  
 				m_Payload[i]->SetAlive(false);
-				return true;
+				if (m_Type[i] != -1) return m_Type[i];
+				else return -2;
 			}
 		}
-	return false;
+	return -3;
 }
 
 const D3DXVECTOR3 & CPayloadManager::getPos(int slot) const

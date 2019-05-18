@@ -1,14 +1,13 @@
 ﻿  GameFramework.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-d:\come_back_home\come_back_home\gameframework.cpp(296): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\come_back_home\come_back_home\gameframework.cpp(599): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\come_back_home\come_back_home\gameframework.cpp(600): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\come_back_home\come_back_home\gameframework.cpp(605): warning C4244: '=': 'DWORD'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\come_back_home\come_back_home\gameframework.cpp(613): warning C4244: '=': 'DWORD'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\come_back_home\come_back_home\gameframework.cpp(614): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(79): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(80): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(302): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(593): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(594): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(599): warning C4244: '=': 'DWORD'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(607): warning C4244: '=': 'DWORD'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\come_back_home\come_back_home\gameframework.cpp(608): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다.
-  12 of 119 functions (10.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    5 functions had inline decision re-evaluated but remain unchanged
-  코드를 생성했습니다.
-  Come_back_home.vcxproj -> D:\Come_back_home\Release\Come_back_home.exe
+d:\come_back_home\come_back_home\stdafx.cpp : fatal error C1301: D:\Come_back_home\Release\Come_back_home.ipdb 프로그램 데이터베이스에 액세스하는 동안 오류가 발생했습니다. 형식이 잘못되었습니다. 삭제한 다음 다시 빌드하십시오.
+LINK : fatal error LNK1257: 코드를 생성하지 못했습니다.

@@ -55,13 +55,13 @@ public:
 
 	void JumpUpdate(float dt);
 
+	float m_ScreenWidth;
+	float m_ScreenHeight;
+
 protected:
 	// settings
 	LPDIRECT3D9 m_pD3D;
 	LPDIRECT3DDEVICE9 m_pD3DDevice;
-
-	float m_ScreenWidth;
-	float m_ScreenHeight;
 
 	// use classes
 	CText* m_Text;
@@ -96,6 +96,7 @@ protected:
 	CPayloadManager* m_PlayerPM;
 	CPayloadManager* m_InvaderPM;
 	CPayloadManager* m_TrapPM;
+	CPayloadManager* m_ItemPM;
 
 	// invader
 	D3DXVECTOR3 m_InvaderPos;
@@ -107,6 +108,10 @@ protected:
 	// trap
 	float m_TrapShootTimer;
 	float m_TrapGap;
+	
+	// item
+	float m_ItemTimer[3][3];
+	bool m_ItemSwitch[3];
 
 	// player Jump
 	bool m_Jump; // is jumping?

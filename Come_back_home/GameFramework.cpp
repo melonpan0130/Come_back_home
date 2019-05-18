@@ -2,7 +2,6 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <time.h>
-#include <math.h>
 #include "CText.h"
 #include "CInput.h"
 #include "CTexture.h"
@@ -26,6 +25,9 @@
 float m_TrapTimerGap[5] = { 800.f, 1200.f,1600.f, 2000.f, 2400.f };
 D3DXVECTOR3 ArrowPos[5] = { D3DXVECTOR3(750.f, 550.f, 0), D3DXVECTOR3(500.f, 750.f, 0), D3DXVECTOR3(1000.f, 750.f, 0), D3DXVECTOR3(500.f, 925.f, 0), D3DXVECTOR3(1000.f, 925.f, 0) };
 
+int checkid = 0;
+int randomCount = 0;
+
 GameFramework::GameFramework()
 {
 	m_pD3D = NULL;
@@ -40,7 +42,15 @@ GameFramework::GameFramework()
 	// basic members
 	m_Pause = false;
 	m_dwPrevTime = 0;
+	m_fTotalTime = 0.f;
 	m_InvaderShootTimer = 0;
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++)
+			m_ItemTimer[i][j] = NULL;
+		m_ItemSwitch[0] = false;
+	}
+		
 
 	m_Score = 0;
 	m_GameMode = 0; // don't use yet...
@@ -57,10 +67,8 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 {
 	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 
-	if (m_pD3D == NULL)return false;
-
-	m_ScreenWidth = 1920;
-	m_ScreenHeight = 1080;
+	if (m_pD3D == NULL)
+		return false;
 
 	D3DPRESENT_PARAMETERS d3dpp;
 	ZeroMemory(&d3dpp, sizeof(d3dpp));
@@ -70,8 +78,8 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 	d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
 	d3dpp.BackBufferCount = 1;
-	d3dpp.BackBufferWidth = 1920;
-	d3dpp.BackBufferHeight = 1080;
+	d3dpp.BackBufferWidth = m_ScreenWidth;
+	d3dpp.BackBufferHeight = m_ScreenHeight;
 
 	if (m_pD3D->CreateDevice(D3DADAPTER_DEFAULT
 		, D3DDEVTYPE_HAL
@@ -112,6 +120,7 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 	m_PlayerPM = NULL;
 	m_InvaderPM = NULL;
 	m_TrapPM = NULL;
+	m_ItemPM = NULL;
 	/*
 	mysql_init(&m_MySql);
 	// if (!mysql_real_connect(&m_MySql, NULL , "root", "1234", "NULL/mysql/", 3306, NULL, 0))
@@ -169,7 +178,9 @@ void GameFramework::LoadTexture()
 	m_Texture->LoadTexture(TEXT("../img/title/credit.png")); // 26
 	
 	m_Texture->LoadTexture(TEXT("../img/stage1/ready.png")); // 27
-	
+	m_Texture->LoadTexture(TEXT("../img/item/3way.png")); // 28
+	m_Texture->LoadTexture(TEXT("../img/item/speedup.png")); // 29
+	m_Texture->LoadTexture(TEXT("../img/item/warhead.png")); // 30
 }
 
 void GameFramework::InitGameData()
@@ -180,8 +191,8 @@ void GameFramework::InitGameData()
 	// player
 	m_Player = new CGameObject(m_pD3DDevice
 		, m_Texture->GetTexture(0)
-		, D3DXVECTOR3(66, 72, 0)
-		, D3DXVECTOR3(100, 836, 0)
+		, D3DXVECTOR3(102.5, 131, 0)
+		, D3DXVECTOR3(100, 790, 0)
 		, 400);
 	m_Player->setAlive(true);
 
@@ -295,6 +306,15 @@ void GameFramework::InitGameData()
 		, D3DXVECTOR3(-1.f, 0.f, 0.f)
 		, D3DXVECTOR2(m_ScreenWidth+86.5, m_ScreenHeight));
 
+	m_ItemPM = new CPayloadManager(m_pD3DDevice
+		, m_Texture->GetTexture(28)
+		, m_Texture->GetTexture(29)
+		, m_Texture->GetTexture(30)
+		, D3DXVECTOR3(50, 50, 0)
+		, 500
+		, D3DXVECTOR3(-1.f, 0.f, 0.f)
+		, D3DXVECTOR2(m_ScreenWidth + 50, m_ScreenHeight));
+
 	// settings
 	m_fGroundHeight = m_Player->getPosition().y;
 
@@ -317,6 +337,7 @@ void GameFramework::ReleaseGameData()
 	
 	m_TitleArrow = NULL;
 
+	m_ItemPM = NULL;
 	m_TrapPM = NULL;
 	m_PlayerPM = NULL;
 	m_InvaderPM = NULL;
@@ -346,7 +367,6 @@ void GameFramework::GameUpdate(UINT & escapecode)
 		DWORD dwDt = dwCurTime - m_dwPrevTime;
 		DWORD dwPt = dwCurTime - m_dwStartTime;
 		float fDt = (float)(dwDt)*0.001f;
-		m_fTotalTime = (float)(dwPt)*0.001f;
 		m_dwPrevTime = dwCurTime;
 
 		if (m_Pause == false)
@@ -450,13 +470,6 @@ void GameFramework::TitleRender()
 	m_TitleArrow->Render();
 
 	m_pD3DDevice->EndScene();
-
-	// mysql; be use database later...
-	/*
-	TCHAR szSQL[50];
-	_stprintf_s(szSQL, 50, _T("%s"), mysql_get_client_info());
-	m_Text->Draw(100, 100, 350, 100, szSQL);
-	*/
 }
 
 void GameFramework::TitleUpdate(float dt, int mode)
@@ -477,10 +490,6 @@ void GameFramework::TitleRender(int mode)
 	m_Title[mode + 5]->Render();
 
 	m_pD3DDevice->EndScene();
-
-	TCHAR szTitleMode[50];
-	_stprintf_s(szTitleMode, 50, _T("%d"), mode);
-	m_Text->Draw(100, 100, 350, 100, szTitleMode);
 }
 
 void GameFramework::ReadyUpdate(float dt)
@@ -500,6 +509,7 @@ void GameFramework::ReadyRender()
 
 void GameFramework::Update(float dt)
 {
+	m_fTotalTime += dt;
 	D3DXVECTOR3 pcDir(0.f, 0.f, 0.f);
 	m_Input->GetArrowDIr(pcDir);
 
@@ -554,15 +564,17 @@ void GameFramework::Render()
 	m_PlayerPM->Draw();
 	m_InvaderPM->Draw();
 	m_TrapPM->Draw();
+	m_ItemPM->Draw();
 
 	// draw Score
 	TCHAR szScore[50];
 	_stprintf_s(szScore, 50, _T("%d"), m_Score);
-	m_Text->DrawRT(1750, 45, 150, 100, szScore);
+	m_Text->DrawRT(m_ScreenWidth-510, 45, 500, 100, szScore);
 
+	// test to check
 	TCHAR szTest[50];
-	_stprintf_s(szTest, 50, _T("invader count : %d"), m_InvaderCount);
-	m_Text->Draw(0, 0, 350, 100, szTest);
+	// _stprintf_s(szTest, 50, _T("m_itemTimer : %0.0f, itemswitch : s, total play time : %0.4f"),  m_fTotalTime);
+	// m_Text->Draw(0, 0, 1000, 100, szTest);
 }
 
 void GameFramework::PayloadUpdate(float dt)
@@ -570,6 +582,9 @@ void GameFramework::PayloadUpdate(float dt)
 	m_PlayerPM->Update(dt);
 	m_InvaderPM->Update(dt);
 	m_TrapPM->Update(dt);
+	m_ItemPM->Update(dt);
+
+	// if()
 
 	if (m_Input->IsPressed(DIK_W))
 		m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.f, -1.f, 0.f));
@@ -577,33 +592,63 @@ void GameFramework::PayloadUpdate(float dt)
 		m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(1.f, 0.f, 0.f));
 	if (m_Input->IsPressed(DIK_A))
 		m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-1.f, 0.f, 0.f));
+	if(m_Input->IsPressed(DIK_E))
+		m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.7f, -0.7f, 0.f));
+	if (m_Input->IsPressed(DIK_Q))
+		m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-0.7f, -0.7f, 0.f));
 
-	// invader가 초당 한번씩 쏘게 하기
-	// make invader one shoot in one seconds
-	int delta_time = GetTickCount() - m_InvaderShootTimer;
+	// make invader one shoot in one seconds. The other too.
+	int invader_time = GetTickCount() - m_InvaderShootTimer;
 	int trap_time = GetTickCount() - m_TrapShootTimer;
 
 	// after -> make a level value, and make delta_time faster.
-	if (delta_time > 3000)
+	if (invader_time > 3000)
 	{
 		m_InvaderShootTimer = GetTickCount();
 		if (m_Invader->getAlive())
 			m_InvaderPM->OnFire(m_Invader->getPosition());
 	}
 	
-	if (trap_time > m_TrapGap)
+	if (trap_time > m_TrapGap) // make trap position by random using array
 	{	
 		m_TrapGap = m_TrapTimerGap[rand() % 5]; // random
+		int id = 0;
+		if (id = rand() % 4 < 3) {
+			randomCount++;
+			m_ItemPM->OnFire(D3DXVECTOR3(m_ScreenWidth + 50, 850.f, 0.f), 0);
+		}
+		else m_TrapPM->OnFire(D3DXVECTOR3(m_ScreenWidth + 86.5, 900.f, 0.f));
+		checkid = id;
 		m_TrapShootTimer = GetTickCount();
-		m_TrapPM->OnFire(D3DXVECTOR3(m_ScreenWidth+86.5, 900.f, 0.f));	
 	}
+
+	m_ItemTimer[0][2] = m_ItemTimer[0][1] = GetTickCount() - m_ItemTimer[0][0];
+
+	if (m_ItemSwitch[0]) {
+		if (m_ItemTimer[0][1] > 200)
+		{
+			m_ItemTimer[0][0] = GetTickCount(); // time reset
+
+		// on fire to 5 ways
+			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.f, -1.f, 0.f));
+			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(1.f, 0.f, 0.f));
+			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-1.f, 0.f, 0.f));
+			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.7f, -0.7f, 0.f));
+			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-0.7f, -0.7f, 0.f));
+		}
+
+		if (m_ItemTimer[0][2] > 5000)
+			m_ItemSwitch[0] = false;
+	}
+
 }
+
 
 void GameFramework::InvaderCollision(float dt)
 {
 	// invader collisioned?
 	if (m_Invader->getAlive() &&
-		m_PlayerPM->IsCollision(m_Invader->getPosition(), (150.f + 35.f)))
+		(m_PlayerPM->IsCollision(m_Invader->getPosition(), (150.f + 35.f)) != -3))
 	{
 		m_Score += 200;
 		m_InvaderCount += 1;
@@ -616,18 +661,18 @@ void GameFramework::InvaderCollision(float dt)
 	}
 
 	// invaderPM collisioned?
-	for(int i=0;i<9;i++)
+	for (int i = 0; i < 10; i++)
 		if (m_InvaderPM->getAlive(i) &&
-			m_PlayerPM->IsCollision(m_InvaderPM->getPos(i), (50.f + 35.f)))
+			(m_PlayerPM->IsCollision(m_InvaderPM->getPos(i), (50.f + 35.f)) != -3))
 		{
 			m_Score += 100;
 			m_InvaderPM->setAlive(i, false);
 		}
 
 	// trap collisioned?
-	for(int i=0; i<9; i++)
+	for (int i = 0; i < 10; i++)
 		if (m_TrapPM->getAlive(i) &&
-			m_PlayerPM->IsCollision(m_TrapPM->getPos(i), (86.5 + 35.f)))
+			(m_PlayerPM->IsCollision(m_TrapPM->getPos(i), (86.5 + 35.f)) != -3))
 		{
 			m_Score += 100;
 			m_TrapPM->setAlive(i, false);
@@ -638,7 +683,7 @@ void GameFramework::InvaderCollision(float dt)
 void GameFramework::PlayerCollision(float dt)
 {
 	if (m_Player->getAlive() &&
-		(m_InvaderPM->IsCollision(m_Player->getPosition(), (66 + 50))) )
+		(m_InvaderPM->IsCollision(m_Player->getPosition(), (102.5 + 50)) != -3))
 	{
 		// lose one life
 		if (m_Life[0]->getAlive())
@@ -649,15 +694,32 @@ void GameFramework::PlayerCollision(float dt)
 			m_Life[2]->setAlive(false);
 		else {
 			// m_Player.setAlive(false);
-			// gamemode = "gameover"
+			// or
+			// gameover.setAlive(true);
+			// m_GameMode = 50; // gameover mode
 		}
 		m_Score -= 200;
 	}
 
-	if (m_Player->getAlive() &&
-		m_TrapPM->IsCollision(m_Player->getPosition(), (66 + 86.5)))
+	if (m_Player->getAlive() && m_TrapPM->IsCollision(m_Player->getPosition(), (102.5 + 86.5)) != -3)
 	{
 		m_Score -= 100;
+	}
+
+	int id = m_ItemPM->IsCollision(m_Player->getPosition(), (102.5 + 50));
+	if (m_Player->getAlive() && id != -3)
+	{
+		switch (id)
+		{
+		case 0: // 3 way
+			m_ItemTimer[0][0] = GetTickCount();
+			m_ItemSwitch[0] = true;
+			break;
+		case 1: // speedup
+			break;
+		case 2: // warhead
+			break;
+		}
 	}
 }
 

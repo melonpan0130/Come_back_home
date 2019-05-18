@@ -35,14 +35,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // 전역 문자열을 초기화합니다.
     MyRegisterClass(hInstance);
 	HWND hWnd = NULL;
+	g_pGameframework = new GameFramework();
 
     // 응용 프로그램 초기화를 수행합니다:
     if (!InitInstance (hInstance, nCmdShow, hWnd, false))
     {
         return FALSE;
     }
-
-	g_pGameframework = new GameFramework();
 
 	g_pGameframework->InitFramework(hWnd, hInstance);
 	g_pGameframework->LoadTexture();
@@ -122,13 +121,18 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, HWND& rhWnd, bool fullScree
 		   , WS_EX_TOPMOST | WS_POPUP
 		   , 0, 0, 1920, 1080
 		   , nullptr, nullptr, hInstance, nullptr);
+
+	   g_pGameframework->m_ScreenWidth = 2400;
+	   g_pGameframework->m_ScreenHeight = 1350;
    }
    else {
 	   hWnd = CreateWindowW(TEXT("HOME")
 		   , TEXT("Come back home")
 		   , WS_OVERLAPPEDWINDOW
-		   , 0, 0, 1080, 720
+		   , 0, 0, 1280, 720// 1280, 720
 		   , nullptr, nullptr, hInstance, nullptr);
+	   g_pGameframework->m_ScreenWidth = 1920;
+	   g_pGameframework->m_ScreenHeight = 1080;
    }
 
    if (!hWnd)

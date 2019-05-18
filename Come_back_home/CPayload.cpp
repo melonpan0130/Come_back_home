@@ -28,6 +28,11 @@ CPayload::~CPayload()
 	}
 }
 
+void CPayload::SetTexture(const LPDIRECT3DTEXTURE9 texture)
+{
+	m_Spr->setTexture(texture);
+}
+
 void CPayload::Update(float dt)
 {
 	if (m_Alive)

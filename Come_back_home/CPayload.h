@@ -19,7 +19,7 @@ public:
 	const D3DXVECTOR3& GetPos() { return m_Pos; }
 
 	void SetDir(const D3DXVECTOR3& dir) { m_Dir = dir; }
-
+	void SetTexture(const LPDIRECT3DTEXTURE9 texture);
 	void OnFire(const D3DXVECTOR3& pos)
 	{
 		m_Alive = true;
