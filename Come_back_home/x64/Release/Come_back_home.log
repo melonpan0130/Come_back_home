@@ -1,24 +1,10 @@
-﻿  Come_back_home.cpp
+﻿  CPayload.cpp
+  CPayloadManager.cpp
+  CText.cpp
+  CTexture.cpp
+  Come_back_home.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\come_back_home\come_back_home\gameframework.h(4): fatal error C1083: 포함 파일을 열 수 없습니다. 'mysql.h': No such file or directory
   GameFramework.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-d:\come_back_home\come_back_home\gameframework.cpp(289): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\come_back_home\come_back_home\gameframework.cpp(437): warning C4477: 'swprintf_s' : 서식 문자열 '%s'에 'wchar_t *' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'const char *'입니다.
-  d:\come_back_home\come_back_home\gameframework.cpp(437): note: 서식 문자열에서 '%hs'을(를) 사용하는 것이 좋습니다.
-  d:\come_back_home\come_back_home\gameframework.cpp(437): note: 서식 문자열에서 '%Ts'을(를) 사용하는 것이 좋습니다.
-  d:\come_back_home\come_back_home\gameframework.cpp(437): note: 이 경고는 Visual C++에서 사용되는 표준이 아닌 의미 체계를 기반으로 합니다.
-d:\come_back_home\come_back_home\gameframework.cpp(555): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\come_back_home\come_back_home\gameframework.cpp(556): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\come_back_home\come_back_home\gameframework.cpp(561): warning C4244: '=': 'DWORD'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\come_back_home\come_back_home\gameframework.cpp(569): warning C4244: '=': 'DWORD'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\come_back_home\come_back_home\gameframework.cpp(570): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-CInput.obj : error LNK2001: DirectInput8Create 외부 기호를 확인할 수 없습니다.
-CInput.obj : error LNK2001: IID_IDirectInput8W 외부 기호를 확인할 수 없습니다.
-CInput.obj : error LNK2001: GUID_SysKeyboard 외부 기호를 확인할 수 없습니다.
-CInput.obj : error LNK2001: c_dfDIKeyboard 외부 기호를 확인할 수 없습니다.
-CInput.obj : error LNK2001: D3DXVec3Normalize 외부 기호를 확인할 수 없습니다.
-CSprite.obj : error LNK2001: D3DXCreateSprite 외부 기호를 확인할 수 없습니다.
-CText.obj : error LNK2001: D3DXCreateFontIndirectW 외부 기호를 확인할 수 없습니다.
-CTexture.obj : error LNK2001: D3DXCreateTextureFromFileExW 외부 기호를 확인할 수 없습니다.
-GameFramework.obj : error LNK2001: Direct3DCreate9 외부 기호를 확인할 수 없습니다.
-D:\Come_back_home\x64\Release\Come_back_home.exe : fatal error LNK1120: 9개의 확인할 수 없는 외부 참조입니다.
+d:\come_back_home\come_back_home\gameframework.h(4): fatal error C1083: 포함 파일을 열 수 없습니다. 'mysql.h': No such file or directory

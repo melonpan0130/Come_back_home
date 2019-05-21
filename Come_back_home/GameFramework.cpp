@@ -18,6 +18,7 @@
 #pragma comment(lib, "dxguid.lib")
 
 // use mysql
+#include <my_global.h>
 #include <WinSock2.h>
 #include <mysql.h>
 #pragma comment(lib, "libmysql.lib")
@@ -46,7 +47,7 @@ GameFramework::GameFramework()
 	m_InvaderShootTimer = 0;
 
 	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++)
+		for (int j = 0; j < 4; j++)
 			m_ItemTimer[i][j] = NULL;
 		m_ItemSwitch[0] = false;
 	}
@@ -191,7 +192,7 @@ void GameFramework::InitGameData()
 	// player
 	m_Player = new CGameObject(m_pD3DDevice
 		, m_Texture->GetTexture(0)
-		, D3DXVECTOR3(102.5, 131, 0)
+		, D3DXVECTOR3(150, 150, 0)
 		, D3DXVECTOR3(100, 790, 0)
 		, 400);
 	m_Player->setAlive(true);
@@ -470,6 +471,10 @@ void GameFramework::TitleRender()
 	m_TitleArrow->Render();
 
 	m_pD3DDevice->EndScene();
+
+//	TCHAR szSQL[50];
+//	_stprintf_s(szSQL, 50, _T("sql : %s"), mysql_get_client_info());
+// 	m_Text->Draw(0, 0, 500, 100, szSQL);
 }
 
 void GameFramework::TitleUpdate(float dt, int mode)
@@ -574,7 +579,8 @@ void GameFramework::Render()
 	// test to check
 	TCHAR szTest[50];
 	// _stprintf_s(szTest, 50, _T("m_itemTimer : %0.0f, itemswitch : s, total play time : %0.4f"),  m_fTotalTime);
-	// m_Text->Draw(0, 0, 1000, 100, szTest);
+	_stprintf_s(szTest, 50, _T("m_itemtimer : %0.0f, total play time : %0.4f"), m_ItemTimer[0][3], m_fTotalTime);
+	m_Text->Draw(0, 0, 1000, 100, szTest);
 }
 
 void GameFramework::PayloadUpdate(float dt)
@@ -621,8 +627,9 @@ void GameFramework::PayloadUpdate(float dt)
 		checkid = id;
 		m_TrapShootTimer = GetTickCount();
 	}
-
-	m_ItemTimer[0][2] = m_ItemTimer[0][1] = GetTickCount() - m_ItemTimer[0][0];
+	/*
+	m_ItemTimer[0][2] = GetTickCount() - 
+	m_ItemTimer[0][1] = GetTickCount() - m_ItemTimer[0][0];
 
 	if (m_ItemSwitch[0]) {
 		if (m_ItemTimer[0][1] > 200)
@@ -636,11 +643,35 @@ void GameFramework::PayloadUpdate(float dt)
 			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.7f, -0.7f, 0.f));
 			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-0.7f, -0.7f, 0.f));
 		}
-
-		if (m_ItemTimer[0][2] > 5000)
+		
+		if (m_ItemTimer[0][2] > 50000)
 			m_ItemSwitch[0] = false;
 	}
+	*/
 
+	if (m_ItemSwitch[0]) {
+		m_ItemTimer[0][1] = GetTickCount() - m_ItemTimer[0][0];
+		m_ItemTimer[0][3] = GetTickCount() - m_ItemTimer[0][2];
+
+		if (m_ItemTimer[0][1] > 200)
+		{
+			m_ItemTimer[0][0] = GetTickCount(); // time reset
+
+			// on fire to 5 ways
+			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.f, -1.f, 0.f));
+			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(1.f, 0.f, 0.f));
+			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-1.f, 0.f, 0.f));
+			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.7f, -0.7f, 0.f));
+			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-0.7f, -0.7f, 0.f));
+
+		}
+
+		if (m_ItemTimer[0][3] > 5000) {
+			// m_itemtimer
+			m_ItemSwitch[0] = false;
+		}
+			
+	}
 }
 
 
@@ -713,6 +744,7 @@ void GameFramework::PlayerCollision(float dt)
 		{
 		case 0: // 3 way
 			m_ItemTimer[0][0] = GetTickCount();
+			m_ItemTimer[0][2] = GetTickCount();
 			m_ItemSwitch[0] = true;
 			break;
 		case 1: // speedup

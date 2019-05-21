@@ -110,7 +110,7 @@ protected:
 	float m_TrapGap;
 	
 	// item
-	float m_ItemTimer[3][3];
+	float m_ItemTimer[3][4];
 	bool m_ItemSwitch[3];
 
 	// player Jump
