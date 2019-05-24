@@ -37,8 +37,8 @@ GameFramework::GameFramework()
 	// initialize classes
 	m_Texture = NULL;
 	m_Text = NULL;
-	for (int i = 0; i < 4; i++)
-		m_Background[i] = NULL;
+	for (int i = 0; i < 2; i++)
+		m_Background1[i] = NULL;
 
 	// basic members
 	m_Pause = false;
@@ -102,17 +102,16 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 
 	// title
 	m_TitleArrow = NULL;
-	for(int i=0; i<5; i++)
+	for(int i=0; i<6; i++)
 		m_Title[i] = NULL;
 
 
 	// background
-	for (int i = 0; i < 4; i++)
-		m_Background[i] = NULL;
+	for (int i = 0; i < 2; i++)
+		m_Background1[i] = NULL;
 
 	// bar
-	for (int i = 0; i < 2; i++)
-		m_Bar[i] = NULL;
+	m_Bar = NULL;
 
 	// life
 	for (int i = 0; i < 3; i++)
@@ -148,40 +147,44 @@ void GameFramework::ReleaseFramework()
 
 void GameFramework::LoadTexture()
 {
-	m_Texture->LoadTexture(TEXT("../img/pc.png")); // 0
-	m_Texture->LoadTexture(TEXT("../img/stage1/sky.png")); // 1
-	m_Texture->LoadTexture(TEXT("../img/stage1/moon.png")); // 2
-	m_Texture->LoadTexture(TEXT("../img/stage1/mountain.png")); // 3
-	m_Texture->LoadTexture(TEXT("../img/stage1/ground.png")); // 4
-	m_Texture->LoadTexture(TEXT("../img/score/scoreBoard.png")); // 5
-	m_Texture->LoadTexture(TEXT("../img/score/lifeBoard.png")); // 6
-	m_Texture->LoadTexture(TEXT("../img/score/life_first.png")); // 7
-	m_Texture->LoadTexture(TEXT("../img/score/life_second.png")); // 8
-	m_Texture->LoadTexture(TEXT("../img/score/life_final.png")); // 9
-	m_Texture->LoadTexture(TEXT("../img/payload.png")); // 10
-	m_Texture->LoadTexture(TEXT("../img/stage1/invader1.png")); // 11
-	m_Texture->LoadTexture(TEXT("../img/stage1/invader2.png")); // 12
-	m_Texture->LoadTexture(TEXT("../img/stage1/invaderPayload.png")); // 13
-	m_Texture->LoadTexture(TEXT("../img/stage1/trap1.png")); // 14
-	m_Texture->LoadTexture(TEXT("../img/title/arrow.png")); // 15
-	m_Texture->LoadTexture(TEXT("../img/title/main.png")); // 16
-	
-	// be deleted....
-	m_Texture->LoadTexture(TEXT("../img/title/t1.png")); // 17
-	m_Texture->LoadTexture(TEXT("../img/title/t2.png")); // 18
-	m_Texture->LoadTexture(TEXT("../img/title/t3.png")); // 19
-	m_Texture->LoadTexture(TEXT("../img/title/t4.png")); // 20
-	m_Texture->LoadTexture(TEXT("../img/title/t5.png")); // 21
-	m_Texture->LoadTexture(TEXT("../img/title/how_to.png")); // 22
-	m_Texture->LoadTexture(TEXT("../img/title/how_to2.png")); // 23
-	m_Texture->LoadTexture(TEXT("../img/title/info.png")); //24
-	m_Texture->LoadTexture(TEXT("../img/title/score.png")); // 25
-	m_Texture->LoadTexture(TEXT("../img/title/credit.png")); // 26
-	
-	m_Texture->LoadTexture(TEXT("../img/stage1/ready.png")); // 27
-	m_Texture->LoadTexture(TEXT("../img/item/3way.png")); // 28
-	m_Texture->LoadTexture(TEXT("../img/item/speedup.png")); // 29
-	m_Texture->LoadTexture(TEXT("../img/item/warhead.png")); // 30
+	// pc
+	m_Texture->LoadTexture(0, TEXT("../img/pc/pc.png"));
+	// 1..
+	m_Texture->LoadTexture(2, TEXT("../img/pc/payload1.png"));
+	m_Texture->LoadTexture(3, TEXT("../img/pc/payload2.png"));
+
+	// system
+	m_Texture->LoadTexture(5, TEXT("../img/system/ready.png"));
+	m_Texture->LoadTexture(6, TEXT("../img/system/board.png"));
+	m_Texture->LoadTexture(7, TEXT("../img/system/life1.png"));
+	m_Texture->LoadTexture(8, TEXT("../img/system/life2.png"));
+	m_Texture->LoadTexture(9, TEXT("../img/system/life3.png"));
+
+	// title
+	m_Texture->LoadTexture(10, TEXT("../img/title/arrow.png"));
+	m_Texture->LoadTexture(11, TEXT("../img/title/main.png"));
+	m_Texture->LoadTexture(12, TEXT("../img/title/how_to.png"));
+	m_Texture->LoadTexture(13, TEXT("../img/title/how_to2.png"));
+	m_Texture->LoadTexture(14, TEXT("../img/title/info.png"));
+	m_Texture->LoadTexture(15, TEXT("../img/title/score.png"));
+	m_Texture->LoadTexture(16, TEXT("../img/title/credit.png"));
+
+	// item
+	m_Texture->LoadTexture(18, TEXT("../img/item/3way.png"));
+	m_Texture->LoadTexture(19, TEXT("../img/item/speedUp.png"));
+	m_Texture->LoadTexture(20, TEXT("../img/item/warhead.png"));
+
+	// stage 1
+	m_Texture->LoadTexture(21, TEXT("../img/stage1/teacher.png"));
+	m_Texture->LoadTexture(22, TEXT("../img/stage1/payload.png"));
+	m_Texture->LoadTexture(23, TEXT("../img/stage1/class.png"));
+	m_Texture->LoadTexture(24, TEXT("../img/stage1/floor.png"));
+	m_Texture->LoadTexture(25, TEXT("../img/stage1/trap1.png"));
+	m_Texture->LoadTexture(26, TEXT("../img/stage1/trap2.png"));
+	m_Texture->LoadTexture(27, TEXT("../img/stage1/trap3.png"));
+
+	// stage 2;
+
 }
 
 void GameFramework::InitGameData()
@@ -199,7 +202,7 @@ void GameFramework::InitGameData()
 
 	// npc
 	m_Invader = new CGameObject(m_pD3DDevice
-		, m_Texture->GetTexture(11)
+		, m_Texture->GetTexture(21)
 		, D3DXVECTOR3(150.f, 150.f, 0)
 		, D3DXVECTOR3(150, 350, 0)
 		, 300);
@@ -208,109 +211,74 @@ void GameFramework::InitGameData()
 	// * title *
 	// arrow
 	m_TitleArrow = new CGameObject(m_pD3DDevice
-		, m_Texture->GetTexture(15)
+		, m_Texture->GetTexture(10)
 		, D3DXVECTOR3(73, 73, 0)
 		, ArrowPos[0]
 		, 0);
 	m_TitleArrow->setAlive(true);
 
-	// main title
-	for(int i=0; i<11; i++)
+	// title
+	for(int i=0; i<6; i++)
 	m_Title[i] = new CBackground(m_pD3DDevice
-		, m_Texture->GetTexture(i+16)
+		, m_Texture->GetTexture(i+11)
 		, 1920
 		, 0);
 
 	m_Ready = new CBackground(m_pD3DDevice
-		, m_Texture->GetTexture(27)
-		, 1920
-		, 0);
-
-	// * background *
-	// sky
-	m_Background[0] = new CBackground(m_pD3DDevice
-		, m_Texture->GetTexture(1)
-		, 1920
-		, 10);
-	
-	// moon
-	m_Background[1] = new CBackground(m_pD3DDevice
-		, m_Texture->GetTexture(2)
-		, 1920
-		, 1);
-
-	// mountain
-	m_Background[2] = new CBackground(m_pD3DDevice
-		, m_Texture->GetTexture(3)
-		, 1920
-		, 50);
-
-	// ground
-	m_Background[3] = new CBackground(m_pD3DDevice
-		, m_Texture->GetTexture(4)
-		, 1920
-		, 500);
-
-	// score bar
-	m_Bar[0] = new CBackground(m_pD3DDevice
 		, m_Texture->GetTexture(5)
 		, 1920
 		, 0);
 
-	// life bar
-	m_Bar[1] = new CBackground(m_pD3DDevice
+	// * background *
+	for (int i = 0; i < 2; i++)
+		m_Background1[i] = new CBackground(m_pD3DDevice
+			, m_Texture->GetTexture(i + 23)
+			, 1920
+			, (i == 1) ? 500 : 50);
+
+	// board
+	m_Bar = new CBackground(m_pD3DDevice
 		, m_Texture->GetTexture(6)
 		, 1920
 		, 0);
 
 	// life
-	m_Life[0] = new CGameObject(m_pD3DDevice
-		, m_Texture->GetTexture(7)
-		, D3DXVECTOR3(0, 0, 0)
-		, D3DXVECTOR3(0, 0, 0)
-		, 0);
-	
-	m_Life[1] = new CGameObject(m_pD3DDevice
-		, m_Texture->GetTexture(8)
-		, D3DXVECTOR3(0, 0, 0)
-		, D3DXVECTOR3(0, 0, 0)
-		, 0);
-
-	m_Life[2] = new CGameObject(m_pD3DDevice
-		, m_Texture->GetTexture(9)
-		, D3DXVECTOR3(0, 0, 0)
-		, D3DXVECTOR3(0, 0, 0)
-		, 0);
-
-	// set life true
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++) {
+		m_Life[i] = new CGameObject(m_pD3DDevice
+			, m_Texture->GetTexture(7 + i)
+			, D3DXVECTOR3(0, 0, 0)
+			, D3DXVECTOR3(0, 0, 0)
+			, 0);
 		m_Life[i]->setAlive(true);
-
+	}
+	
 	m_PlayerPM = new CPayloadManager(m_pD3DDevice
-		, m_Texture->GetTexture(10)
+		, m_Texture->GetTexture(2)
 		, D3DXVECTOR3(35.f, 35.f, 0)
 		, 800.f
 		, D3DXVECTOR3(0.f, -1.f, 0.f)
 		, D3DXVECTOR2(m_ScreenWidth, m_ScreenHeight));
 
 	m_InvaderPM = new CPayloadManager(m_pD3DDevice
-		, m_Texture->GetTexture(13)
+		, m_Texture->GetTexture(22)
 		, D3DXVECTOR3(50.f, 50.f, 0)
 		, 400
 		, D3DXVECTOR3(0.f, 1.f, 0.f)
 		, D3DXVECTOR2(m_ScreenWidth, 840));
 
 	m_TrapPM = new CPayloadManager(m_pD3DDevice
-		, m_Texture->GetTexture(14)
+		, m_Texture->GetTexture(25)
+		, m_Texture->GetTexture(26)
+		, m_Texture->GetTexture(27)
 		, D3DXVECTOR3(86.5f, 86.5f, 0.f)
 		, 500
 		, D3DXVECTOR3(-1.f, 0.f, 0.f)
 		, D3DXVECTOR2(m_ScreenWidth+86.5, m_ScreenHeight));
 
 	m_ItemPM = new CPayloadManager(m_pD3DDevice
-		, m_Texture->GetTexture(28)
-		, m_Texture->GetTexture(29)
-		, m_Texture->GetTexture(30)
+		, m_Texture->GetTexture(18)
+		, m_Texture->GetTexture(19)
+		, m_Texture->GetTexture(20)
 		, D3DXVECTOR3(50, 50, 0)
 		, 500
 		, D3DXVECTOR3(-1.f, 0.f, 0.f)
@@ -318,22 +286,18 @@ void GameFramework::InitGameData()
 
 	// settings
 	m_fGroundHeight = m_Player->getPosition().y;
-
-	
-	
 }
 
 void GameFramework::ReleaseGameData()
 {
 	// delete bar
-	for (int i = 0; i < 2; i++)
-		delete m_Bar[i];
+	delete m_Bar;
 
 	// delete Background
-	for (int i = 0; i < 3; i++)
-		delete m_Background[i];
+	for (int i = 0; i < 2; i++)
+		delete m_Background1[i];
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 6; i++)
 		delete m_Title[i];
 	
 	m_TitleArrow = NULL;
@@ -465,8 +429,7 @@ void GameFramework::TitleUpdate(float dt)
 
 void GameFramework::TitleRender()
 {
-	for (int i = 0; i < 6; i++)
-		m_Title[i]->Render();
+	m_Title[0]->Render();
 
 	m_TitleArrow->Render();
 
@@ -479,7 +442,7 @@ void GameFramework::TitleRender()
 
 void GameFramework::TitleUpdate(float dt, int mode)
 {
-	m_Title[mode + 5]->Update(dt);
+	m_Title[mode]->Update(dt);
 
 	if (mode == 1 && m_Input->IsPressed(DIK_TAB))
 		m_GameMode = 2;
@@ -492,7 +455,7 @@ void GameFramework::TitleUpdate(float dt, int mode)
 
 void GameFramework::TitleRender(int mode)
 {
-	m_Title[mode + 5]->Render();
+	m_Title[mode]->Render();
 
 	m_pD3DDevice->EndScene();
 }
@@ -537,11 +500,10 @@ void GameFramework::Update(float dt)
 	JumpUpdate(dt); // jump
 
 	// update background
-	for (int i = 0; i < 4; i++)
-		m_Background[i]->Update(dt);
-
 	for (int i = 0; i < 2; i++)
-		m_Bar[i]->Update(dt);
+		m_Background1[i]->Update(dt);
+
+	m_Bar->Update(dt);
 
 	for (int i = 0; i < 3; i++)
 		m_Life[i]->Update(dt);
@@ -551,12 +513,11 @@ void GameFramework::Update(float dt)
 void GameFramework::Render()
 {
 	// render background
-	for (int i = 0; i < 4; i++)
-		m_Background[i]->Render();
+	for (int i = 0; i < 2; i++)
+		m_Background1[i]->Render();
 
 	// render bar
-	for (int i = 0; i < 2; i++)
-		m_Bar[i]->Render();
+	m_Bar->Render();
 
 	for (int i = 0; i < 3; i++)
 		m_Life[i]->Render();
@@ -574,11 +535,10 @@ void GameFramework::Render()
 	// draw Score
 	TCHAR szScore[50];
 	_stprintf_s(szScore, 50, _T("%d"), m_Score);
-	m_Text->DrawRT(m_ScreenWidth-510, 45, 500, 100, szScore);
+	m_Text->DrawRT(m_ScreenWidth-600, 70, 500, 100, szScore);
 
 	// test to check
 	TCHAR szTest[50];
-	// _stprintf_s(szTest, 50, _T("m_itemTimer : %0.0f, itemswitch : s, total play time : %0.4f"),  m_fTotalTime);
 	_stprintf_s(szTest, 50, _T("m_itemtimer : %0.0f, total play time : %0.4f"), m_ItemTimer[0][3], m_fTotalTime);
 	m_Text->Draw(0, 0, 1000, 100, szTest);
 }
@@ -589,8 +549,6 @@ void GameFramework::PayloadUpdate(float dt)
 	m_InvaderPM->Update(dt);
 	m_TrapPM->Update(dt);
 	m_ItemPM->Update(dt);
-
-	// if()
 
 	if (m_Input->IsPressed(DIK_W))
 		m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.f, -1.f, 0.f));
@@ -618,36 +576,16 @@ void GameFramework::PayloadUpdate(float dt)
 	if (trap_time > m_TrapGap) // make trap position by random using array
 	{	
 		m_TrapGap = m_TrapTimerGap[rand() % 5]; // random
-		int id = 0;
-		if (id = rand() % 4 < 3) {
+		int id = (int)rand() % 6;
+		if (id < 3) {
 			randomCount++;
-			m_ItemPM->OnFire(D3DXVECTOR3(m_ScreenWidth + 50, 850.f, 0.f), 0);
+			m_ItemPM->OnFire(D3DXVECTOR3(m_ScreenWidth + 50, 850.f, 0.f), id);
 		}
-		else m_TrapPM->OnFire(D3DXVECTOR3(m_ScreenWidth + 86.5, 900.f, 0.f));
+		else m_TrapPM->OnFire(D3DXVECTOR3(m_ScreenWidth + 86.5, 900.f, 0.f), id-3);
+
 		checkid = id;
 		m_TrapShootTimer = GetTickCount();
 	}
-	/*
-	m_ItemTimer[0][2] = GetTickCount() - 
-	m_ItemTimer[0][1] = GetTickCount() - m_ItemTimer[0][0];
-
-	if (m_ItemSwitch[0]) {
-		if (m_ItemTimer[0][1] > 200)
-		{
-			m_ItemTimer[0][0] = GetTickCount(); // time reset
-
-		// on fire to 5 ways
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.f, -1.f, 0.f));
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(1.f, 0.f, 0.f));
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-1.f, 0.f, 0.f));
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.7f, -0.7f, 0.f));
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-0.7f, -0.7f, 0.f));
-		}
-		
-		if (m_ItemTimer[0][2] > 50000)
-			m_ItemSwitch[0] = false;
-	}
-	*/
 
 	if (m_ItemSwitch[0]) {
 		m_ItemTimer[0][1] = GetTickCount() - m_ItemTimer[0][0];
@@ -656,21 +594,19 @@ void GameFramework::PayloadUpdate(float dt)
 		if (m_ItemTimer[0][1] > 200)
 		{
 			m_ItemTimer[0][0] = GetTickCount(); // time reset
-
+			D3DXVECTOR3 playerPos = m_Player->getPosition();
 			// on fire to 5 ways
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.f, -1.f, 0.f));
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(1.f, 0.f, 0.f));
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-1.f, 0.f, 0.f));
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.7f, -0.7f, 0.f));
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-0.7f, -0.7f, 0.f));
-
+			m_PlayerPM->OnFire(playerPos, D3DXVECTOR3(0.f, -1.f, 0.f));
+			m_PlayerPM->OnFire(playerPos, D3DXVECTOR3(1.f, 0.f, 0.f));
+			m_PlayerPM->OnFire(playerPos, D3DXVECTOR3(-1.f, 0.f, 0.f));
+			m_PlayerPM->OnFire(playerPos, D3DXVECTOR3(0.7f, -0.7f, 0.f));
+			m_PlayerPM->OnFire(playerPos, D3DXVECTOR3(-0.7f, -0.7f, 0.f));
 		}
 
-		if (m_ItemTimer[0][3] > 5000) {
+		if (m_ItemTimer[0][3] > 3000) {
 			// m_itemtimer
 			m_ItemSwitch[0] = false;
 		}
-			
 	}
 }
 
@@ -685,11 +621,12 @@ void GameFramework::InvaderCollision(float dt)
 		m_InvaderCount += 1;
 	}
 
+	/*
 	if (m_InvaderCount > 20)
 	{
 		// get out, and appear new invader
 		m_Invader->setTexture(m_Texture->GetTexture(12));
-	}
+	}*/
 
 	// invaderPM collisioned?
 	for (int i = 0; i < 10; i++)

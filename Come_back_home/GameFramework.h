@@ -79,7 +79,6 @@ protected:
 	int m_GameMode; // gameMode
 	int m_Score; // score
 	
-	
 	// game object
 	CGameObject* m_Player; // player
 	CGameObject* m_Invader; // invader
@@ -87,10 +86,10 @@ protected:
 	CGameObject* m_TitleArrow; // title arrow
 
 	// background; 
-	CBackground* m_Title[11]; // title background
+	CBackground* m_Title[6]; // title background
 	CBackground* m_Ready;
-	CBackground* m_Background[4]; // background
-	CBackground* m_Bar[2]; // score Bar, life Bar
+	CBackground* m_Background1[2]; // background
+	CBackground* m_Bar; // score Bar, life Bar
 	
 	// payloadManager
 	CPayloadManager* m_PlayerPM;

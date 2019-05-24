@@ -41,6 +41,22 @@ int CTexture::LoadTexture(const TCHAR * filename)
 	return slot;
 }
 
+int CTexture::LoadTexture(int slot, const TCHAR * filename)
+{
+	auto hr = D3DXCreateTextureFromFileEx(m_pD3DDevice
+		, filename
+		, 0, 0, 0, 0
+		, D3DFMT_A8R8G8B8
+		, D3DPOOL_DEFAULT
+		, D3DX_FILTER_NONE
+		, D3DX_DEFAULT
+		, D3DCOLOR_XRGB(255, 0, 0)
+		, NULL, NULL, &m_pTextures[slot]);
+
+	if (FAILED(hr))return -1;
+	return slot;
+}
+
 void CTexture::ReleaseAll()
 {
 	for(int i=0;i<MAX_SIZE;i++)

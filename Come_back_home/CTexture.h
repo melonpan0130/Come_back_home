@@ -8,6 +8,7 @@ public:
 	virtual ~CTexture();
 
 	int LoadTexture(const TCHAR* filename);
+	int LoadTexture(int slot, const TCHAR* filename);
 	void ReleaseAll();
 
 	LPDIRECT3DTEXTURE9 GetTexture(int slot) const;
