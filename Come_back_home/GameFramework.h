@@ -11,6 +11,7 @@ class CSprite;
 class CGameObject;
 class CBackground;
 class CPayloadManager;
+class CTrapManager;
 
 class GameFramework
 {
@@ -35,9 +36,6 @@ public:
 
 	void TitleUpdate(float dt, int mode);
 	void TitleRender(int mode);
-
-	void IntroUpdate(float dt);
-	void IntroRender();
 
 	void ReadyUpdate(float dt);
 	void ReadyRender();
@@ -96,6 +94,7 @@ protected:
 	CPayloadManager* m_InvaderPM;
 	CPayloadManager* m_TrapPM;
 	CPayloadManager* m_ItemPM;
+	CTrapManager* m_TrapTM;
 
 	// invader
 	D3DXVECTOR3 m_InvaderPos;

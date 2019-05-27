@@ -9,6 +9,7 @@
 #include "CGameObject.h"
 #include "CBackground.h"
 #include "CPayloadManager.h"
+#include "CTrapManager.h"
 #include "GameFramework.h"
 
 #pragma comment(lib, "d3d9.lib")
@@ -120,6 +121,7 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 	m_PlayerPM = NULL;
 	m_InvaderPM = NULL;
 	m_TrapPM = NULL;
+	m_TrapTM = NULL;
 	m_ItemPM = NULL;
 	/*
 	mysql_init(&m_MySql);
@@ -274,6 +276,12 @@ void GameFramework::InitGameData()
 		, 500
 		, D3DXVECTOR3(-1.f, 0.f, 0.f)
 		, D3DXVECTOR2(m_ScreenWidth+86.5, m_ScreenHeight));
+
+	m_TrapTM = new CTrapManager(m_pD3DDevice
+	,m_Texture->GetTexture(25)
+		, m_Texture->GetTexture(26)
+		, m_Texture->GetTexture(27)
+	,D3DXVECTOR3())
 
 	m_ItemPM = new CPayloadManager(m_pD3DDevice
 		, m_Texture->GetTexture(18)
