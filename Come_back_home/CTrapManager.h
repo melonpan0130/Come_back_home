@@ -34,8 +34,10 @@ public:
 	void OnFire(const D3DXVECTOR3& pos, int type);
 
 	bool IsCollision(const D3DXVECTOR3& pos, float radious);
+	bool IsCollision(const D3DXVECTOR3& pos, float radious, int type);
+
 protected:
 	CPayload* m_Payload[3][PAYLOAD_MAX];
-	
+	float m_Size[2][3];
 };
 

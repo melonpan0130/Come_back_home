@@ -21,29 +21,43 @@ CTrapManager::CTrapManager(LPDIRECT3DDEVICE9 pD3DDevice
 		m_Payload[2][i] = new CPayload(pD3DDevice
 			, texture3, center, speed, dir, screensize);
 	}
-	
 }
 
 CTrapManager::CTrapManager(LPDIRECT3DDEVICE9 pD3DDevice
 	, LPDIRECT3DTEXTURE9 texture1
 	, LPDIRECT3DTEXTURE9 texture2
 	, LPDIRECT3DTEXTURE9 texture3
-	, const D3DXVECTOR3 & center1
-	, const D3DXVECTOR3 & center2
-	, const D3DXVECTOR3 & center3
+	, const D3DXVECTOR3& center1
+	, const D3DXVECTOR3& center2
+	, const D3DXVECTOR3& center3
 	, float speed
 	, const D3DXVECTOR3 dir
 	, const D3DXVECTOR2 screensize)
 {
+	for (int i = 0; i < 2; i++) {
+		if (i == 0) { // width
+			m_Size[i][0] = center1.x * 2;
+			m_Size[i][1] = center2.x * 2;
+			m_Size[i][2] = center3.x * 2;
+		}
+		else { // height
+			m_Size[i][0] = center1.y * 2;
+			m_Size[i][1] = center2.y * 2;
+			m_Size[i][2] = center3.y * 2;
+		}
+	}
+
 	for (int i = 0; i < PAYLOAD_MAX; i++)
 	{
 		m_Payload[0][i] = new CPayload(pD3DDevice
-			, texture1, center1, speed, dir, screensize);
+			, texture1, D3DXVECTOR3(0.f, m_Size[1][0], 0.f), speed, dir, screensize);
 		m_Payload[1][i] = new CPayload(pD3DDevice
-			, texture2, center2, speed, dir, screensize);
+			, texture2, D3DXVECTOR3(0.f, m_Size[1][1], 0.f), speed, dir, screensize);
 		m_Payload[2][i] = new CPayload(pD3DDevice
-			, texture3, center3, speed, dir, screensize);
+			, texture3, D3DXVECTOR3(0.f, m_Size[1][2], 0.f), speed, dir, screensize);
 	}
+
+	
 }
 
 CTrapManager::~CTrapManager()
@@ -56,7 +70,7 @@ CTrapManager::~CTrapManager()
 int CTrapManager::getEmptyPayload(int type)
 {
 	for (int i = 0; i < PAYLOAD_MAX; i++)
-		if (!m_Payload[type][i]->IsAlive)
+		if (!m_Payload[type][i]->IsAlive())
 			return i;
 	return -1;
 }
@@ -65,7 +79,7 @@ void CTrapManager::Update(float dt)
 {
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < PAYLOAD_MAX; j++)
-			if (m_Payload[i][j]->IsAlive)
+			if (m_Payload[i][j]->IsAlive())
 				m_Payload[i][j]->Update(dt);
 }
 
@@ -73,7 +87,7 @@ void CTrapManager::Draw()
 {
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < PAYLOAD_MAX; j++)
-			if (m_Payload[i][j]->IsAlive)
+			if (m_Payload[i][j]->IsAlive())
 				m_Payload[i][j]->Draw();
 }
 
@@ -97,5 +111,22 @@ bool CTrapManager::IsCollision(const D3DXVECTOR3 & pos, float radious)
 					return true;
 				}
 			}
+	return false;
+}
+
+bool CTrapManager::IsCollision(const D3DXVECTOR3& pos, float radious, int type)
+{
+	for (int i = 0; i < PAYLOAD_MAX; i++)
+		if (m_Payload[type][i]->IsAlive())
+		{
+			if ((pos.x >= m_Payload[type][i]->GetPos().x - radious
+				&& pos.x <= m_Payload[type][i]->GetPos().x + m_Size[0][type] + radious)
+				&& (pos.y >= m_Payload[type][i]->GetPos().y - m_Size[1][type] - radious
+				&& pos.y <= m_Payload[type][i]->GetPos().y + radious))
+			{
+				m_Payload[type][i]->SetAlive(false);
+				return true;
+			}
+		}
 	return false;
 }
