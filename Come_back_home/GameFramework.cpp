@@ -26,6 +26,7 @@
 
 float m_TrapTimerGap[5] = { 800.f, 1200.f,1600.f, 2000.f, 2400.f };
 D3DXVECTOR3 ArrowPos[3] = { D3DXVECTOR3(945.f, 570.f, 0), D3DXVECTOR3(945.f, 670.f, 0), D3DXVECTOR3(945.f, 770.f, 0) };
+D3DXVECTOR3 SelectArrowPos[2] = { D3DXVECTOR3(550.f,350.f,0), D3DXVECTOR3(1200.f,350.f,0) };
 
 int checkid = 0;
 int randomCount = 0;
@@ -106,7 +107,6 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 	for(int i=0; i<6; i++)
 		m_Title[i] = NULL;
 
-
 	// background
 	for (int i = 0; i < 2; i++)
 		m_Background1[i] = NULL;
@@ -120,7 +120,6 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 
 	m_PlayerPM = NULL;
 	m_InvaderPM = NULL;
-	m_TrapPM = NULL;
 	m_TrapTM = NULL;
 	m_ItemPM = NULL;
 	/*
@@ -237,7 +236,7 @@ void GameFramework::InitGameData()
 		m_Background1[i] = new CBackground(m_pD3DDevice
 			, m_Texture->GetTexture(i + 23)
 			, 1920
-			, (i == 1) ? 500 : 50);
+			, (i == 1) ? 800 : 50);
 
 	// board
 	m_Bar = new CBackground(m_pD3DDevice
@@ -262,21 +261,13 @@ void GameFramework::InitGameData()
 		, D3DXVECTOR3(0.f, -1.f, 0.f)
 		, D3DXVECTOR2(m_ScreenWidth, m_ScreenHeight));
 
+	// teacher's project
 	m_InvaderPM = new CPayloadManager(m_pD3DDevice
 		, m_Texture->GetTexture(22)
 		, D3DXVECTOR3(50.f, 50.f, 0)
 		, 400
 		, D3DXVECTOR3(0.f, 1.f, 0.f)
 		, D3DXVECTOR2(m_ScreenWidth, 840));
-
-	m_TrapPM = new CPayloadManager(m_pD3DDevice
-		, m_Texture->GetTexture(25)
-		, m_Texture->GetTexture(26)
-		, m_Texture->GetTexture(27)
-		, D3DXVECTOR3(86.5f, 86.5f, 0.f)
-		, 500
-		, D3DXVECTOR3(-1.f, 0.f, 0.f)
-		, D3DXVECTOR2(m_ScreenWidth+86.5, m_ScreenHeight));
 
 	m_TrapTM = new CTrapManager(m_pD3DDevice
 		, m_Texture->GetTexture(25)
@@ -285,16 +276,17 @@ void GameFramework::InitGameData()
 		, D3DXVECTOR3(62.f, 75.f, 0.f)
 		, D3DXVECTOR3(119.5, 117.5, 0.f)
 		, D3DXVECTOR3(107.f, 60.f, 0.f)
-		, 500
+		, 800
 		, D3DXVECTOR3(-1.f, 0.f, 0.f)
-		, D3DXVECTOR2(m_ScreenWidth + 119.5, m_ScreenHeight));
+		, D3DXVECTOR2(m_ScreenWidth + 119.5, m_ScreenHeight)
+		, -300.f);
 
 	m_ItemPM = new CPayloadManager(m_pD3DDevice
 		, m_Texture->GetTexture(18)
 		, m_Texture->GetTexture(19)
 		, m_Texture->GetTexture(20)
 		, D3DXVECTOR3(50, 50, 0)
-		, 500
+		, 800
 		, D3DXVECTOR3(-1.f, 0.f, 0.f)
 		, D3DXVECTOR2(m_ScreenWidth + 50, m_ScreenHeight));
 
@@ -317,7 +309,6 @@ void GameFramework::ReleaseGameData()
 	m_TitleArrow = NULL;
 
 	m_ItemPM = NULL;
-	m_TrapPM = NULL;
 	m_TrapTM = NULL;
 	m_PlayerPM = NULL;
 	m_InvaderPM = NULL;
@@ -359,6 +350,7 @@ void GameFramework::GameUpdate(UINT & escapecode)
 				TitleUpdate(fDt, m_GameMode);
 				break; 
 			case 8: // select subject
+				SelectUpdate(fDt);
 				break;
 			case 9: // ready
 				ReadyUpdate(fDt);
@@ -393,13 +385,18 @@ void GameFramework::GameRender()
 			break;
 		case 8:
 			// select subject
+			SelectRender();
 			break;
 		case 9:// ready
 			ReadyRender();
 			break;
-		case 10:
+		case 10: // stage1
 			Render();
 			m_Invader->Render();
+			break;
+		case 19: // change Scene
+			break;
+		case 20: // stage2
 			break;
 		}
 
@@ -428,15 +425,16 @@ void GameFramework::TitleUpdate(float dt)
 		}
 	}
 	m_TitleArrow->setPosition(ArrowPos[m_TitleMode]);
-	// m_TitleArrow->setPosition(ArrowPos[0]);
 	
 	if (m_Input->IsPressed(DIK_SPACE))
 	{
 		switch (m_TitleMode)
 		{
 		case 0:
-			m_dwStartTime = GetTickCount64();
-			m_GameMode = 9;
+			m_TitleArrow->setTexture(m_Texture->GetTexture(15));
+			m_TitleArrow->setPosition(D3DXVECTOR3(0, 0, 0));
+			m_TitleMode = 0;
+			m_GameMode = 8;
 			break;
 		case 1: case 2:
 			m_GameMode = m_TitleMode;
@@ -473,6 +471,40 @@ void GameFramework::TitleRender(int mode)
 	m_Title[mode]->Render();
 
 	m_pD3DDevice->EndScene();
+}
+
+void GameFramework::SelectUpdate(float dt)
+{
+	m_Title[3]->Update(dt);
+	m_TitleArrow->Update(dt);
+
+	if (m_Input->IsPressed(DIK_DOWNARROW) || m_Input->IsPressed(DIK_RIGHTARROW))
+	{
+		if (m_TitleMode != 1)
+			m_TitleMode = (++m_TitleMode % 2);
+	}
+	else if (m_Input->IsPressed(DIK_UPARROW) || m_Input->IsPressed(DIK_LEFTARROW))
+	{
+		if (m_TitleMode != 0) {
+			m_TitleMode = (m_TitleMode-- % 2);
+		}
+	}
+	m_TitleArrow->setPosition(SelectArrowPos[m_TitleMode]);
+
+	if (m_Input->IsPressed(DIK_SPACE))
+	{
+		if (m_TitleMode)m_PlayerPM->setTextureAll(m_Texture->GetTexture(2)); // software
+		else m_PlayerPM->setTextureAll(m_Texture->GetTexture(3)); // design
+
+		m_dwStartTime = GetTickCount64();
+		m_GameMode = 9;
+	}
+}
+
+void GameFramework::SelectRender()
+{
+	m_Title[3]->Render();
+	m_TitleArrow->Render();
 }
 
 void GameFramework::ReadyUpdate(float dt)
@@ -544,7 +576,6 @@ void GameFramework::Render()
 	// payload
 	m_PlayerPM->Draw();
 	m_InvaderPM->Draw();
-	m_TrapPM->Draw();
 	m_TrapTM->Draw();
 	m_ItemPM->Draw();
 
@@ -563,7 +594,6 @@ void GameFramework::PayloadUpdate(float dt)
 {
 	m_PlayerPM->Update(dt);
 	m_InvaderPM->Update(dt);
-	m_TrapPM->Update(dt);
 	m_TrapTM->Update(dt);
 	m_ItemPM->Update(dt);
 
@@ -637,33 +667,6 @@ void GameFramework::InvaderCollision(float dt)
 		m_Score += 200;
 		m_InvaderCount += 1;
 	}
-
-	/*
-	if (m_InvaderCount > 20)
-	{
-		// get out, and appear new invader
-		m_Invader->setTexture(m_Texture->GetTexture(12));
-	}*/
-
-	// invaderPM collisioned?
-	for (int i = 0; i < 10; i++)
-		if (m_InvaderPM->getAlive(i) &&
-			(m_PlayerPM->IsCollision(m_InvaderPM->getPos(i), (50.f + 35.f)) != -3))
-		{
-			m_Score += 100;
-			m_InvaderPM->setAlive(i, false);
-		}
-
-	// trap collisioned? ;  be deleted
-	for (int i = 0; i < 10; i++)
-		if (m_TrapPM->getAlive(i) &&
-			(m_PlayerPM->IsCollision(m_TrapPM->getPos(i), (86.5 + 35.f)) != -3))
-		{
-			m_Score += 100;
-			m_TrapPM->setAlive(i, false);
-		}
-
-	
 }
 
 // is player collisioned???
@@ -722,21 +725,23 @@ void GameFramework::JumpUpdate(float dt)
 			m_Jump2 = false;
 			m_JumpTime = 0.f;
 			m_PrevHeight = pcPos.y;
+			m_JumpPower = 15.0f;
 		}
-		else if (m_JumpFalling == true && m_Jump2 == false)
+		else if (m_Jump2 == false)
 		{
 			m_JumpTime = 0.f;
 			m_Jump2 = true;
+			m_JumpPower = 10.0f;
 		}
 	}
 
 	if (m_Jump == true)
 	{
 		m_JumpTime += (dt*4.f);
-		float height = 15.f + (-4.9f*(m_JumpTime*m_JumpTime));
+		float height = m_JumpPower + (-4.9f*(m_JumpTime*m_JumpTime));
 		// jumpPower + (gravity * (jumpTime)^2);
 		pcPos.y -= height;
-		m_JumpFalling = (pcPos.y - m_PrevHeight < 0.f) ? false : true;
+		// m_JumpFalling = (pcPos.y - m_PrevHeight < 0.f) ? false : true;
 		// check is falling
 
 		// is lower than ground?

@@ -32,7 +32,8 @@ CTrapManager::CTrapManager(LPDIRECT3DDEVICE9 pD3DDevice
 	, const D3DXVECTOR3& center3
 	, float speed
 	, const D3DXVECTOR3 dir
-	, const D3DXVECTOR2 screensize)
+	, const D3DXVECTOR2 screensize
+	, float MinX)
 {
 	for (int i = 0; i < 2; i++) {
 		if (i == 0) { // width
@@ -50,11 +51,11 @@ CTrapManager::CTrapManager(LPDIRECT3DDEVICE9 pD3DDevice
 	for (int i = 0; i < PAYLOAD_MAX; i++)
 	{
 		m_Payload[0][i] = new CPayload(pD3DDevice
-			, texture1, D3DXVECTOR3(0.f, m_Size[1][0], 0.f), speed, dir, screensize);
+			, texture1, D3DXVECTOR3(0.f, m_Size[1][0], 0.f), speed, dir, screensize, MinX);
 		m_Payload[1][i] = new CPayload(pD3DDevice
-			, texture2, D3DXVECTOR3(0.f, m_Size[1][1], 0.f), speed, dir, screensize);
+			, texture2, D3DXVECTOR3(0.f, m_Size[1][1], 0.f), speed, dir, screensize, MinX);
 		m_Payload[2][i] = new CPayload(pD3DDevice
-			, texture3, D3DXVECTOR3(0.f, m_Size[1][2], 0.f), speed, dir, screensize);
+			, texture3, D3DXVECTOR3(0.f, m_Size[1][2], 0.f), speed, dir, screensize, MinX);
 	}
 
 	

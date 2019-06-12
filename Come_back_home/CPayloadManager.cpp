@@ -127,3 +127,9 @@ void CPayloadManager::setAlive(int slot, bool flag)
 {
 	m_Payload[slot]->SetAlive(flag);
 }
+
+void CPayloadManager::setTextureAll(LPDIRECT3DTEXTURE9 texture)
+{
+	for (int i = 0; i < PAYLOAD_MAX; i++)
+		m_Payload[i]->SetTexture(texture);
+}

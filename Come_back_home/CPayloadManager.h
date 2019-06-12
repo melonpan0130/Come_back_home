@@ -37,6 +37,7 @@ public:
 
 	bool getAlive(int slot);
 	void setAlive(int slot, bool flag);
+	void setTextureAll(LPDIRECT3DTEXTURE9 texture);
 
 protected:
 	CPayload* m_Payload[PAYLOAD_MAX];

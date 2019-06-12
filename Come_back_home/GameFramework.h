@@ -37,6 +37,9 @@ public:
 	void TitleUpdate(float dt, int mode);
 	void TitleRender(int mode);
 
+	void SelectUpdate(float dt);
+	void SelectRender();
+
 	void ReadyUpdate(float dt);
 	void ReadyRender();
 
@@ -118,6 +121,7 @@ protected:
 	float m_fGroundHeight; // ground height
 	float m_PrevHeight; // check previous height for know is falling
 	float m_JumpTime; // Jump Time
+	float m_JumpPower; // Jump Power
 
 	// MYSQL m_MySql;
 };

@@ -23,7 +23,8 @@ public:
 		, const D3DXVECTOR3& center3
 		, float speed
 		, const D3DXVECTOR3 dir
-		, const D3DXVECTOR2 screensize);
+		, const D3DXVECTOR2 screensize
+		, float MinX = 0);
 	virtual ~CTrapManager();
 
 	int getEmptyPayload(int type);

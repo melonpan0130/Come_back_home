@@ -6,15 +6,17 @@
 
 
 CPayload::CPayload(LPDIRECT3DDEVICE9 pD3DDevice
-	, LPDIRECT3DTEXTURE9 & texture
-	, const D3DXVECTOR3 & center
+	, LPDIRECT3DTEXTURE9& texture
+	, const D3DXVECTOR3& center
 	, float speed
-	, const D3DXVECTOR3 & dir
-	, const D3DXVECTOR2 screensize)
+	, const D3DXVECTOR3& dir
+	, const D3DXVECTOR2 screensize
+	, float MinX)
 	:m_Alive(false)
 	, m_Speed(speed)
 	, m_Dir(dir)
 	, m_ScreenSize(screensize)
+	, m_MinX(MinX)
 {
 	m_Spr = new CSprite(pD3DDevice, texture, center);
 }
@@ -39,8 +41,8 @@ void CPayload::Update(float dt)
 	{
 		m_Pos += m_Dir * dt*m_Speed;
 
-		if (m_Pos.y<0 || m_Pos.y>m_ScreenSize.y ||
-			m_Pos.x<0 || m_Pos.x>m_ScreenSize.x)
+		if (m_Pos.y<m_MinX || m_Pos.y>m_ScreenSize.y ||
+			m_Pos.x<m_MinX || m_Pos.x>m_ScreenSize.x)
 			m_Alive = false;
 	}
 }

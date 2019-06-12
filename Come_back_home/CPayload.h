@@ -9,7 +9,8 @@ public:
 	,const D3DXVECTOR3& center
 	,float speed
 	,const D3DXVECTOR3& dir
-	,const D3DXVECTOR2 screensize);
+	,const D3DXVECTOR2 screensize
+	,float MinX = 0);
 	virtual ~CPayload();
 
 	bool IsAlive() const { return m_Alive; }
@@ -43,6 +44,7 @@ protected:
 	D3DXVECTOR2 m_ScreenSize; // payload flies in this screensize
 
 	float m_Speed;
+	float m_MinX;
 	bool m_Alive;
 };
 
