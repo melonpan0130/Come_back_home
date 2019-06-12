@@ -41,6 +41,8 @@ GameFramework::GameFramework()
 	m_Text = NULL;
 	for (int i = 0; i < 2; i++)
 		m_Background1[i] = NULL;
+	for (int i = 0; i < 4; i++)
+		m_Background2[i] = NULL;
 
 	// basic members
 	m_Pause = false;
@@ -110,6 +112,11 @@ bool GameFramework::InitFramework(HWND hWnd, HINSTANCE hInstance)
 	// background
 	for (int i = 0; i < 2; i++)
 		m_Background1[i] = NULL;
+
+	for (int i = 0; i < 4; i++)
+		m_Background2[i] = NULL;
+
+	m_Raining = NULL;
 
 	// bar
 	m_Bar = NULL;
@@ -185,7 +192,17 @@ void GameFramework::LoadTexture()
 	m_Texture->LoadTexture(26, TEXT("../img/stage1/trap2.png"));
 	m_Texture->LoadTexture(27, TEXT("../img/stage1/trap3.png"));
 
-	// stage 2;
+	// change Scene
+	// m_Texture->LoadTexture(28, TEXT("../img/"))
+
+	// stage 2
+	m_Texture->LoadTexture(30, TEXT("../img/stage2/cloud.png"));
+	m_Texture->LoadTexture(31, TEXT("../img/stage2/thunder.png"));
+	m_Texture->LoadTexture(32, TEXT("../img/stage2/cloudy.png"));
+	m_Texture->LoadTexture(33, TEXT("../img/stage2/cloudy_cloud.png"));
+	m_Texture->LoadTexture(34, TEXT("../img/stage2/building.png"));
+	m_Texture->LoadTexture(35, TEXT("../img/stage2/ground.png"));
+	m_Texture->LoadTexture(36, TEXT("../img/stage2/rain.png"));
 
 }
 
@@ -231,12 +248,44 @@ void GameFramework::InitGameData()
 		, 1920
 		, 0);
 
-	// * background *
+	// * background1 *
 	for (int i = 0; i < 2; i++)
 		m_Background1[i] = new CBackground(m_pD3DDevice
 			, m_Texture->GetTexture(i + 23)
 			, 1920
 			, (i == 1) ? 800 : 50);
+
+	// background2
+	// cloudy
+	m_Background2[0] = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(32)
+		, 1920
+		, 50);
+
+	// cloudy_cloud
+	m_Background2[1] = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(33)
+		, 1920
+		, 50);
+
+	// building
+	m_Background2[2] = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(34)
+		, 11284
+		, 800);
+
+	// ground
+	m_Background2[3] = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(35)
+		, 1920
+		, 800);
+
+	// raining
+	m_Raining = new CBackground(m_pD3DDevice
+		, m_Texture->GetTexture(36)
+		, 1920
+		, 500
+		, true); // vertical true
 
 	// board
 	m_Bar = new CBackground(m_pD3DDevice
@@ -303,6 +352,11 @@ void GameFramework::ReleaseGameData()
 	for (int i = 0; i < 2; i++)
 		delete m_Background1[i];
 
+	for (int i = 0; i < 4; i++)
+		delete m_Background2[i];
+
+	delete m_Raining;
+
 	for (int i = 0; i < 6; i++)
 		delete m_Title[i];
 	
@@ -355,8 +409,13 @@ void GameFramework::GameUpdate(UINT & escapecode)
 			case 9: // ready
 				ReadyUpdate(fDt);
 				break;
-			case 10: // play game
+			case 10: // play game ; stage1
 				Update(fDt);
+				break;
+			case 19: // change Scene
+				break;
+			case 20: // stage2
+				Update2(fDt);
 				break;
 			}
 			// รั น฿ป็ update ..
@@ -392,11 +451,11 @@ void GameFramework::GameRender()
 			break;
 		case 10: // stage1
 			Render();
-			m_Invader->Render();
 			break;
 		case 19: // change Scene
 			break;
 		case 20: // stage2
+			Render2();
 			break;
 		}
 
@@ -555,6 +614,11 @@ void GameFramework::Update(float dt)
 	for (int i = 0; i < 3; i++)
 		m_Life[i]->Update(dt);
 	
+	// if 1 minuts passed, change the scene.
+	// gamemode = 19
+	// test -> gamemode = 20
+	if (m_fTotalTime > 10.f)
+		m_GameMode = 20;
 }
 
 void GameFramework::Render()
@@ -568,7 +632,7 @@ void GameFramework::Render()
 
 	for (int i = 0; i < 3; i++)
 		m_Life[i]->Render();
-		
+	
 	// render player
 	m_Player->Render();
 	m_Invader->Render();
@@ -583,6 +647,77 @@ void GameFramework::Render()
 	TCHAR szScore[50];
 	_stprintf_s(szScore, 50, _T("%d"), m_Score);
 	m_Text->DrawRT(m_ScreenWidth-600, 70, 500, 100, szScore);
+
+	// test to check
+	TCHAR szTest[50];
+	_stprintf_s(szTest, 50, _T("m_itemtimer : %0.0f, total play time : %0.4f"), m_ItemTimer[0][3], m_fTotalTime);
+	m_Text->Draw(0, 0, 1000, 100, szTest);
+}
+
+void GameFramework::Update2(float dt)
+{
+	m_fTotalTime += dt;
+	D3DXVECTOR3 pcDir(0.f, 0.f, 0.f);
+	m_Input->GetArrowDIr(pcDir);
+
+	m_Player->setDirection(pcDir.x, pcDir.y);
+	m_Player->ArrangePosition(66.f, m_ScreenWidth - 66.f); // limit moving
+	m_Player->Update(dt);
+
+	m_Invader->setDirection(m_InvaderDir.x, m_InvaderDir.y);
+	m_Invader->Update(dt);
+
+	if (m_Invader->IsTouched(150.f, m_ScreenWidth - 150.f, m_InvaderRightDir))
+	{
+		m_InvaderDir = D3DXVECTOR3((m_InvaderRightDir ? -1.f : 1.f), 0.f, 0.f);
+		m_InvaderRightDir = !m_InvaderRightDir;
+	}
+
+	PayloadUpdate(dt); // fire payload
+	InvaderCollision(dt); // is invader collisioned?
+	PlayerCollision(dt); // is player collisioned?
+	JumpUpdate(dt); // jump
+
+	// update background
+	for (int i = 0; i < 4; i++)
+		m_Background2[i]->Update(dt); // background2
+	m_Raining->Update(dt); // raining
+
+	m_Bar->Update(dt);
+
+	for (int i = 0; i < 3; i++)
+		m_Life[i]->Update(dt);
+}
+
+void GameFramework::Render2()
+{
+	// render background
+	for (int i = 0; i < 4; i++)
+		m_Background2[i]->Render();
+
+	// render bar
+	m_Bar->Render();
+
+	for (int i = 0; i < 3; i++)
+		m_Life[i]->Render();
+
+	// render player
+	m_Player->Render();
+	m_Invader->Render();
+
+	// payload
+	m_PlayerPM->Draw();
+	m_InvaderPM->Draw();
+	m_TrapTM->Draw();
+	m_ItemPM->Draw();
+
+	// raining
+	m_Raining->Render();
+
+	// draw Score
+	TCHAR szScore[50];
+	_stprintf_s(szScore, 50, _T("%d"), m_Score);
+	m_Text->DrawRT(m_ScreenWidth - 600, 70, 500, 100, szScore);
 
 	// test to check
 	TCHAR szTest[50];

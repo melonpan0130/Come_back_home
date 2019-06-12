@@ -31,20 +31,33 @@ public:
 	void GameUpdate(UINT& escapecode);
 	void GameRender();
 
+	// Title
 	void TitleUpdate(float dt);
 	void TitleRender();
 
+	// Title - more
 	void TitleUpdate(float dt, int mode);
 	void TitleRender(int mode);
 
+	// Select Subject
 	void SelectUpdate(float dt);
 	void SelectRender();
 
+	// Ready
 	void ReadyUpdate(float dt);
 	void ReadyRender();
 
+	// stage 1
 	void Update(float dt);
 	void Render();
+
+	// change Scene
+	void GoOutUpdate(float dt);
+	void GoOutRender();
+
+	// stage 2
+	void Update2(float dt);
+	void Render2();
 
 	void OutroUpdate(float dt);
 	void OutroRender();
@@ -89,7 +102,9 @@ protected:
 	// background; 
 	CBackground* m_Title[6]; // title background
 	CBackground* m_Ready;
-	CBackground* m_Background1[2]; // background
+	CBackground* m_Background1[2]; // stage 1's background
+	CBackground* m_Background2[4]; // stage 2's background
+	CBackground* m_Raining; // stage 2's weather
 	CBackground* m_Bar; // score Bar, life Bar
 	
 	// payloadManager
