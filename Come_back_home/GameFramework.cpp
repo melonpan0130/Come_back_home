@@ -195,7 +195,7 @@ void GameFramework::LoadTexture()
 	// change Scene
 	// m_Texture->LoadTexture(28, TEXT("../img/"))
 
-	// stage 2
+	// stage 2 - background
 	m_Texture->LoadTexture(30, TEXT("../img/stage2/cloud.png"));
 	m_Texture->LoadTexture(31, TEXT("../img/stage2/thunder.png"));
 	m_Texture->LoadTexture(32, TEXT("../img/stage2/cloudy.png"));
@@ -204,6 +204,8 @@ void GameFramework::LoadTexture()
 	m_Texture->LoadTexture(35, TEXT("../img/stage2/ground.png"));
 	m_Texture->LoadTexture(36, TEXT("../img/stage2/rain.png"));
 
+	// stage 2 - trap
+	
 }
 
 void GameFramework::InitGameData()
@@ -223,7 +225,7 @@ void GameFramework::InitGameData()
 	m_Invader = new CGameObject(m_pD3DDevice
 		, m_Texture->GetTexture(21)
 		, D3DXVECTOR3(150.f, 150.f, 0)
-		, D3DXVECTOR3(150, 350, 0)
+		, D3DXVECTOR3(2070, 350, 0)
 		, 300);
 	m_Invader->setAlive(true);
 
@@ -271,7 +273,7 @@ void GameFramework::InitGameData()
 	// building
 	m_Background2[2] = new CBackground(m_pD3DDevice
 		, m_Texture->GetTexture(34)
-		, 11280
+		, 7559
 		, 800);
 
 	// ground
@@ -617,8 +619,13 @@ void GameFramework::Update(float dt)
 	// if 1 minuts passed, change the scene.
 	// gamemode = 19
 	// test -> gamemode = 20
-	if (m_fTotalTime > 10.f)
+	if (m_fTotalTime > 10.f) {
+		// change invader
+		m_Invader->setTexture(m_Texture->GetTexture(30));
+		m_InvaderPM->setTextureAll(m_Texture->GetTexture(31));
+		// m_traptm set texture or change tm..
 		m_GameMode = 20;
+	}
 }
 
 void GameFramework::Render()
@@ -633,15 +640,16 @@ void GameFramework::Render()
 	for (int i = 0; i < 3; i++)
 		m_Life[i]->Render();
 	
-	// render player
-	m_Player->Render();
-	m_Invader->Render();
-
 	// payload
 	m_PlayerPM->Draw();
 	m_InvaderPM->Draw();
 	m_TrapTM->Draw();
 	m_ItemPM->Draw();
+
+	// render player
+	m_Player->Render();
+	m_Invader->Render();
+
 
 	// draw Score
 	TCHAR szScore[50];
@@ -701,15 +709,15 @@ void GameFramework::Render2()
 	for (int i = 0; i < 3; i++)
 		m_Life[i]->Render();
 
-	// render player
-	m_Player->Render();
-	m_Invader->Render();
-
 	// payload
 	m_PlayerPM->Draw();
 	m_InvaderPM->Draw();
 	m_TrapTM->Draw();
 	m_ItemPM->Draw();
+
+	// render player
+	m_Player->Render();
+	m_Invader->Render();
 
 	// raining
 	m_Raining->Render();
