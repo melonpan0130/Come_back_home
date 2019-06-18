@@ -40,8 +40,8 @@ void CBackground::Update(float dt)
 	D3DXVECTOR3 Pos1, Pos2, Pos3;
 	if (IsVertical) {
 		Pos1 = D3DXVECTOR3(m_BasePos.x, m_Scroll, 0.f);
-		Pos2 = Pos1 + D3DXVECTOR3(0.f, m_ImgLength - 1.f, 0.f);
-		Pos3 = Pos2 + D3DXVECTOR3(0.f, m_ImgLength - 1.f, 0.f);
+		Pos2 = Pos1 - D3DXVECTOR3(0.f, m_ImgLength - 1.f, 0.f);
+		Pos3 = Pos2 - D3DXVECTOR3(0.f, m_ImgLength - 1.f, 0.f);
 	}
 	else {
 		Pos1 = D3DXVECTOR3(m_Scroll, m_BasePos.y, 0.f);

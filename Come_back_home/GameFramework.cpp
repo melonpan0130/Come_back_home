@@ -271,7 +271,7 @@ void GameFramework::InitGameData()
 	// building
 	m_Background2[2] = new CBackground(m_pD3DDevice
 		, m_Texture->GetTexture(34)
-		, 11284
+		, 11280
 		, 800);
 
 	// ground
