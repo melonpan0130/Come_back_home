@@ -22,6 +22,7 @@ public:
 
 	void ArrangePosition(float sx, float ex);
 	bool IsTouched(float leftX, float rightX, bool useRight);
+	bool IsTouched(float leftX, bool useRight);
 
 	void setPosition(D3DXVECTOR3 pos) { m_Pos = pos; }
 	const D3DXVECTOR3& getPosition()const { return m_Pos; }

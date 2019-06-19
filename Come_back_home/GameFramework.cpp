@@ -31,6 +31,8 @@ D3DXVECTOR3 SelectArrowPos[2] = { D3DXVECTOR3(550.f,350.f,0), D3DXVECTOR3(1200.f
 int checkid = 0;
 int randomCount = 0;
 
+int ha = 10;
+
 GameFramework::GameFramework()
 {
 	m_pD3D = NULL;
@@ -198,10 +200,10 @@ void GameFramework::LoadTexture()
 	// stage 2 - background
 	m_Texture->LoadTexture(30, TEXT("../img/stage2/cloud.png"));
 	m_Texture->LoadTexture(31, TEXT("../img/stage2/thunder.png"));
-	m_Texture->LoadTexture(32, TEXT("../img/stage2/cloudy.png"));
-	m_Texture->LoadTexture(33, TEXT("../img/stage2/cloudy_cloud.png"));
-	m_Texture->LoadTexture(34, TEXT("../img/stage2/building.png"));
-	m_Texture->LoadTexture(35, TEXT("../img/stage2/ground.png"));
+	m_Texture->LoadTexture(32, TEXT("../img/stage2/cloudy.png")); // 0
+	m_Texture->LoadTexture(33, TEXT("../img/stage2/cloudy_cloud.png")); //1
+	m_Texture->LoadTexture(34, TEXT("../img/stage2/building.png")); // 2
+	m_Texture->LoadTexture(35, TEXT("../img/stage2/ground.png")); // 3
 	m_Texture->LoadTexture(36, TEXT("../img/stage2/rain.png"));
 
 	// stage 2 - trap
@@ -255,7 +257,7 @@ void GameFramework::InitGameData()
 		m_Background1[i] = new CBackground(m_pD3DDevice
 			, m_Texture->GetTexture(i + 23)
 			, 1920
-			, 800);
+			, (i == 1) ? 800 : 400);
 
 	// background2
 	// cloudy
@@ -274,7 +276,7 @@ void GameFramework::InitGameData()
 	m_Background2[2] = new CBackground(m_pD3DDevice
 		, m_Texture->GetTexture(34)
 		, 7559
-		, 800);
+		, 400);
 
 	// ground
 	m_Background2[3] = new CBackground(m_pD3DDevice
@@ -594,9 +596,11 @@ void GameFramework::Update(float dt)
 	m_Player->Update(dt);
 
 	m_Invader->setDirection(m_InvaderDir.x, m_InvaderDir.y);
-	m_Invader->Update(dt);
 	
-	if (m_Invader->IsTouched(150.f, m_ScreenWidth - 150.f, m_InvaderRightDir))
+	if (m_fTotalTime > 2.f)
+		m_Invader->Update(dt);
+	
+	if (ha==10 && m_Invader->IsTouched(150.f, m_ScreenWidth - 150.f, m_InvaderRightDir))
 	{
 		m_InvaderDir = D3DXVECTOR3((m_InvaderRightDir ? -1.f : 1.f), 0.f, 0.f);
 		m_InvaderRightDir = !m_InvaderRightDir;
@@ -619,22 +623,64 @@ void GameFramework::Update(float dt)
 	// if 1 minuts passed, change the scene.
 	// gamemode = 19
 	// test -> gamemode = 20
-	if (m_fTotalTime > 0.f) {
+	float changeScene = 5.f;
+
+	if (m_fTotalTime > changeScene) {
 		// change invader
-		m_Invader->setTexture(m_Texture->GetTexture(30));
-		m_InvaderPM->setTextureAll(m_Texture->GetTexture(31));
 		// m_traptm set texture or change tm..
 		m_Background1[0]->EndScene(m_Texture->GetTexture(28));
+		// m_GameMode = 20;
 
-		m_GameMode = 20;
+		for (int i = 0; i < 4; i++)
+			m_Background2[i]->Update(dt); // background2
+	}
+	if (m_fTotalTime > changeScene + 8.f)
+	{
+		m_Background1[1]->EndScene(m_Texture->GetTexture(24));
+
+		m_Invader->ArrangePosition(-300, m_ScreenWidth-150);
+		ha = 2;
+
+		if (m_Invader->IsTouched(-150, m_ScreenWidth-150, false)) {
+			m_Invader->setAlive(false);
+			ha = 5;
+		}
+	}
+
+	if (m_fTotalTime > changeScene + 13.f)
+	{
+		// animation that teacher get out
+		m_Invader->setTexture(m_Texture->GetTexture(30));
+		m_InvaderPM->setTextureAll(m_Texture->GetTexture(31));
 	}
 }
 
 void GameFramework::Render()
 {
 	// render background
+	for (int i = 0; i < 4; i++)
+		m_Background2[i]->Render();
+
+	// render background
 	for (int i = 0; i < 2; i++)
 		m_Background1[i]->Render();
+
+	float changeScene = 0.f;
+	if (m_fTotalTime > changeScene) {
+		// change invader
+		// m_traptm set texture or change tm..
+		m_Background1[0]->EndScene(m_Texture->GetTexture(28));
+		// m_GameMode = 20;
+		m_Background2[0]->Render();
+		m_Background2[1]->Render();
+		m_Background2[2]->Render();
+
+		m_Background1[0]->Render();// class
+
+		m_Background2[3]->Render(); // ground
+		m_Background1[1]->Render(); // floor
+	}
+
 
 	// render bar
 	m_Bar->Render();
@@ -660,7 +706,7 @@ void GameFramework::Render()
 
 	// test to check
 	TCHAR szTest[50];
-	_stprintf_s(szTest, 50, _T("m_itemtimer : %0.0f, total play time : %0.4f"), m_ItemTimer[0][3], m_fTotalTime);
+	_stprintf_s(szTest, 50, _T("m_itemtimer : %0.0f, total play time : %0.4f, %d"), m_ItemTimer[0][3], m_fTotalTime, ha);
 	m_Text->Draw(0, 0, 1000, 100, szTest);
 }
 

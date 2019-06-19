@@ -74,11 +74,13 @@ void CGameObject::ArrangePosition(float sx, float ex)
 	if (m_Pos.x > ex)m_Pos.x = ex;
 }
 
+
+
 bool CGameObject::IsTouched(float leftX, float rightX, bool useRight)
 {
 	if (m_Alive) {
-		if (useRight&&m_Pos.x >= rightX)return true;
-		else if (!useRight&&m_Pos.x <= leftX)return true;
+		if (useRight && m_Pos.x >= rightX)return true;
+		else if (!useRight && m_Pos.x <= leftX)return true;
 	}
 	return false;
 }
