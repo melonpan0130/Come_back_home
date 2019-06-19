@@ -5,11 +5,11 @@ public:
 	explicit CBackground(LPDIRECT3DDEVICE9 pD3DDevice
 		, LPDIRECT3DTEXTURE9 pTexture
 		, float imgLength
-		, float speed
-		, boolean vertical = false);
+		, float speed);
 	virtual ~CBackground();
 
 	void Update(float dt);
+	void UpdateVertical(float dt);
 	void Render();
 
 	void setScroll(float point)
@@ -19,6 +19,12 @@ public:
 			m_Scroll += m_ImgLength;
 	}
 
+	void EndScene(LPDIRECT3DTEXTURE9 texture)
+	{
+		m_Spr[2]->setTexture(texture);
+		loop = false;
+	}
+
 protected:
 	CSprite* m_Spr[3];
 
@@ -26,6 +32,6 @@ protected:
 	float m_Scroll;
 	float m_ImgLength; // be width or height
 	float m_ScrollSpeed;
-	boolean IsVertical;
+	boolean loop;
 };
 

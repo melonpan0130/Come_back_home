@@ -193,7 +193,7 @@ void GameFramework::LoadTexture()
 	m_Texture->LoadTexture(27, TEXT("../img/stage1/trap3.png"));
 
 	// change Scene
-	// m_Texture->LoadTexture(28, TEXT("../img/"))
+	m_Texture->LoadTexture(28, TEXT("../img/stage1/changeScene.png"));
 
 	// stage 2 - background
 	m_Texture->LoadTexture(30, TEXT("../img/stage2/cloud.png"));
@@ -255,7 +255,7 @@ void GameFramework::InitGameData()
 		m_Background1[i] = new CBackground(m_pD3DDevice
 			, m_Texture->GetTexture(i + 23)
 			, 1920
-			, (i == 1) ? 800 : 50);
+			, 800);
 
 	// background2
 	// cloudy
@@ -285,9 +285,8 @@ void GameFramework::InitGameData()
 	// raining
 	m_Raining = new CBackground(m_pD3DDevice
 		, m_Texture->GetTexture(36)
-		, 1920
-		, 500
-		, true); // vertical true
+		, 1080
+		, 500); // vertical true
 
 	// board
 	m_Bar = new CBackground(m_pD3DDevice
@@ -415,6 +414,7 @@ void GameFramework::GameUpdate(UINT & escapecode)
 				Update(fDt);
 				break;
 			case 19: // change Scene
+
 				break;
 			case 20: // stage2
 				Update2(fDt);
@@ -619,11 +619,13 @@ void GameFramework::Update(float dt)
 	// if 1 minuts passed, change the scene.
 	// gamemode = 19
 	// test -> gamemode = 20
-	if (m_fTotalTime > 10.f) {
+	if (m_fTotalTime > 0.f) {
 		// change invader
 		m_Invader->setTexture(m_Texture->GetTexture(30));
 		m_InvaderPM->setTextureAll(m_Texture->GetTexture(31));
 		// m_traptm set texture or change tm..
+		m_Background1[0]->EndScene(m_Texture->GetTexture(28));
+
 		m_GameMode = 20;
 	}
 }
@@ -689,7 +691,7 @@ void GameFramework::Update2(float dt)
 	// update background
 	for (int i = 0; i < 4; i++)
 		m_Background2[i]->Update(dt); // background2
-	m_Raining->Update(dt); // raining
+	m_Raining->UpdateVertical(dt); // raining
 
 	m_Bar->Update(dt);
 
@@ -703,12 +705,6 @@ void GameFramework::Render2()
 	for (int i = 0; i < 4; i++)
 		m_Background2[i]->Render();
 
-	// render bar
-	m_Bar->Render();
-
-	for (int i = 0; i < 3; i++)
-		m_Life[i]->Render();
-
 	// payload
 	m_PlayerPM->Draw();
 	m_InvaderPM->Draw();
@@ -721,6 +717,12 @@ void GameFramework::Render2()
 
 	// raining
 	m_Raining->Render();
+
+	// render bar
+	m_Bar->Render();
+
+	for (int i = 0; i < 3; i++)
+		m_Life[i]->Render();
 
 	// draw Score
 	TCHAR szScore[50];
