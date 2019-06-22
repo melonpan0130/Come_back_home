@@ -85,6 +85,12 @@ bool CGameObject::IsTouched(float leftX, float rightX, bool useRight)
 	return false;
 }
 
+bool CGameObject::IsTouched(float leftX)
+{
+	if (m_Alive && (m_Pos.x <= leftX)) return true;
+	return false;
+}
+
 void CGameObject::setTexture(LPDIRECT3DTEXTURE9 pTexture)
 {
 	m_Spr->setTexture(pTexture);

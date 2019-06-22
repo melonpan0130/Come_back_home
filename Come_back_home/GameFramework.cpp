@@ -158,10 +158,12 @@ void GameFramework::ReleaseFramework()
 void GameFramework::LoadTexture()
 {
 	// pc
-	m_Texture->LoadTexture(0, TEXT("../img/pc/pc.png"));
+	m_Texture->LoadTexture(0, TEXT("../img/pc/pc1.png"));
+	m_Texture->LoadTexture(1, TEXT("../img/pc/pc2.png"));
+	m_Texture->LoadTexture(2, TEXT("../img/pc/pc3.png"));
 	// 1..
-	m_Texture->LoadTexture(2, TEXT("../img/pc/payload1.png"));
-	m_Texture->LoadTexture(3, TEXT("../img/pc/payload2.png"));
+	m_Texture->LoadTexture(3, TEXT("../img/pc/payload1.png"));
+	m_Texture->LoadTexture(4, TEXT("../img/pc/payload2.png"));
 
 	// system
 	m_Texture->LoadTexture(5, TEXT("../img/system/ready.png"));
@@ -595,17 +597,15 @@ void GameFramework::Update(float dt)
 	m_Player->ArrangePosition(66.f, m_ScreenWidth - 66.f); // limit moving
 	m_Player->Update(dt);
 
-	m_Invader->setDirection(m_InvaderDir.x, m_InvaderDir.y);
-	
 	if (m_fTotalTime > 2.f)
 		m_Invader->Update(dt);
 	
-	if (ha==10 && m_Invader->IsTouched(150.f, m_ScreenWidth - 150.f, m_InvaderRightDir))
+	if (ha==10&& m_Invader->IsTouched(150.f, m_ScreenWidth - 150.f, m_InvaderRightDir))
 	{
-		m_InvaderDir = D3DXVECTOR3((m_InvaderRightDir ? -1.f : 1.f), 0.f, 0.f);
-		m_InvaderRightDir = !m_InvaderRightDir;
+		m_Invader->setDirection((m_InvaderRightDir ? -1.f : 1.f), 0.f);
+		// m_InvaderRightDir = !m_InvaderRightDir;
 	}
-	
+
 	PayloadUpdate(dt); // fire payload
 	InvaderCollision(dt); // is invader collisioned?
 	PlayerCollision(dt); // is player collisioned?
@@ -614,8 +614,6 @@ void GameFramework::Update(float dt)
 	// update background
 	for (int i = 0; i < 2; i++)
 		m_Background1[i]->Update(dt);
-
-	m_Bar->Update(dt);
 
 	for (int i = 0; i < 3; i++)
 		m_Life[i]->Update(dt);
@@ -634,25 +632,40 @@ void GameFramework::Update(float dt)
 		for (int i = 0; i < 4; i++)
 			m_Background2[i]->Update(dt); // background2
 	}
-	if (m_fTotalTime > changeScene + 8.f)
-	{
-		m_Background1[1]->EndScene(m_Texture->GetTexture(24));
 
-		m_Invader->ArrangePosition(-300, m_ScreenWidth-150);
+	if (m_fTotalTime > changeScene + 3.f)
+	{
+		m_Background1[1]->EndScene(m_Texture->GetTexture(24)); // change ground
+		m_Invader->ArrangePosition(-300, m_ScreenWidth + 300); // invader arrage
 		ha = 2;
 
-		if (m_Invader->IsTouched(-150, m_ScreenWidth-150, false)) {
-			m_Invader->setAlive(false);
+		// animation that teacher get out
+		if (m_Invader->IsTouched(-150, m_ScreenWidth + 150, m_InvaderRightDir)) { // rewrite after - test
+			m_InvaderRightDir != m_InvaderRightDir;
+			m_Invader->setAlive(false); // invader die...
 			ha = 5;
 		}
 	}
 
-	if (m_fTotalTime > changeScene + 13.f)
+	if (m_fTotalTime > changeScene + 5.f)
 	{
-		// animation that teacher get out
+		m_Invader->setPosition(D3DXVECTOR3(m_ScreenWidth - 150, 350, 0));
+	}
+	/*
+
+	if (m_fTotalTime > changeScene + 5.f)
+	{
+		m_Invader->setPosition(D3DXVECTOR3(m_ScreenWidth-150, 350, 0));
+		// m_Invader->setDirection(-1.f, 0);
 		m_Invader->setTexture(m_Texture->GetTexture(30));
 		m_InvaderPM->setTextureAll(m_Texture->GetTexture(31));
+		m_Invader->setAlive(true);
+		ha = 7;
 	}
+	if (ha == 7&& m_Invader->IsTouched(150.f))
+	{
+		ha = 10;
+	}*/
 }
 
 void GameFramework::Render()
@@ -738,8 +751,6 @@ void GameFramework::Update2(float dt)
 	for (int i = 0; i < 4; i++)
 		m_Background2[i]->Update(dt); // background2
 	m_Raining->UpdateVertical(dt); // raining
-
-	m_Bar->Update(dt);
 
 	for (int i = 0; i < 3; i++)
 		m_Life[i]->Update(dt);
@@ -864,7 +875,7 @@ void GameFramework::InvaderCollision(float dt)
 void GameFramework::PlayerCollision(float dt)
 {
 	if (m_Player->getAlive() &&
-		(m_InvaderPM->IsCollision(m_Player->getPosition(), (102.5 + 50)) != -3))
+		(m_InvaderPM->IsCollision(m_Player->getPosition(), (70 + 50)) != -3))
 	{
 		// lose one life
 		if (m_Life[0]->getAlive())
@@ -883,11 +894,11 @@ void GameFramework::PlayerCollision(float dt)
 	}
 
 	for(int i=0; i<3; i++)
-		if (m_Player->getAlive() && m_TrapTM->IsCollision(m_Player->getPosition(), 102.5, i))
+		if (m_Player->getAlive() && m_TrapTM->IsCollision(m_Player->getPosition(), 70, i))
 		{
 			m_Score -= 100;
 		}
-	int id = m_ItemPM->IsCollision(m_Player->getPosition(), (102.5 + 50));
+	int id = m_ItemPM->IsCollision(m_Player->getPosition(), (70 + 50));
 	if (m_Player->getAlive() && id != -3)
 	{
 		switch (id)
