@@ -32,6 +32,7 @@ int checkid = 0;
 int randomCount = 0;
 
 int ha = 10;
+boolean once = true;
 
 GameFramework::GameFramework()
 {
@@ -57,13 +58,14 @@ GameFramework::GameFramework()
 			m_ItemTimer[i][j] = NULL;
 		m_ItemSwitch[0] = false;
 	}
-		
 
 	m_Score = 0;
 	m_GameMode = 0; // don't use yet...
 	m_TitleMode = 0;
 	m_TrapGap = m_TrapTimerGap[rand() % 5];
 	m_InvaderCount = 0;
+	m_AnimationTexture = 0;
+	m_IsAnimationAsc = true;
 }
 
 GameFramework::~GameFramework()
@@ -416,6 +418,7 @@ void GameFramework::GameUpdate(UINT & escapecode)
 				break;
 			case 10: // play game ; stage1
 				Update(fDt);
+				playerAnimationUpdate(fDt);
 				break;
 			case 19: // change Scene
 
@@ -600,10 +603,10 @@ void GameFramework::Update(float dt)
 	if (m_fTotalTime > 2.f)
 		m_Invader->Update(dt);
 	
-	if (ha==10&& m_Invader->IsTouched(150.f, m_ScreenWidth - 150.f, m_InvaderRightDir))
+	if (ha==10&&m_Invader->IsTouched(150.f, m_ScreenWidth - 150.f, m_InvaderRightDir))
 	{
 		m_Invader->setDirection((m_InvaderRightDir ? -1.f : 1.f), 0.f);
-		// m_InvaderRightDir = !m_InvaderRightDir;
+		m_InvaderRightDir = !m_InvaderRightDir;
 	}
 
 	PayloadUpdate(dt); // fire payload
@@ -632,40 +635,44 @@ void GameFramework::Update(float dt)
 		for (int i = 0; i < 4; i++)
 			m_Background2[i]->Update(dt); // background2
 	}
-
-	if (m_fTotalTime > changeScene + 3.f)
+	
+	// change scene and invader
+	if (m_fTotalTime > changeScene + 3.f) 
 	{
+		// change scene
 		m_Background1[1]->EndScene(m_Texture->GetTexture(24)); // change ground
-		m_Invader->ArrangePosition(-300, m_ScreenWidth + 300); // invader arrage
+		
+		m_Invader->ArrangePosition(-300, m_ScreenWidth + 300); // invader arrage to go out
 		ha = 2;
-
+		/*
 		// animation that teacher get out
 		if (m_Invader->IsTouched(-150, m_ScreenWidth + 150, m_InvaderRightDir)) { // rewrite after - test
-			m_InvaderRightDir != m_InvaderRightDir;
-			m_Invader->setAlive(false); // invader die...
+			// m_InvaderRightDir != m_InvaderRightDir;
+			// m_Invader->setAlive(false); // invader die...
 			ha = 5;
 		}
+		*/
 	}
-
-	if (m_fTotalTime > changeScene + 5.f)
+	
+	if (m_fTotalTime > changeScene + 5.f && once)
 	{
 		m_Invader->setPosition(D3DXVECTOR3(m_ScreenWidth - 150, 350, 0));
+		once = false;
+		m_Invader->setTexture(m_Texture->GetTexture(30));
+		m_InvaderPM->setTextureAll(m_Texture->GetTexture(31));
+		ha = 10;
 	}
 	/*
-
 	if (m_fTotalTime > changeScene + 5.f)
 	{
 		m_Invader->setPosition(D3DXVECTOR3(m_ScreenWidth-150, 350, 0));
 		// m_Invader->setDirection(-1.f, 0);
 		m_Invader->setTexture(m_Texture->GetTexture(30));
 		m_InvaderPM->setTextureAll(m_Texture->GetTexture(31));
-		m_Invader->setAlive(true);
+		// m_Invader->setAlive(true);
 		ha = 7;
 	}
-	if (ha == 7&& m_Invader->IsTouched(150.f))
-	{
-		ha = 10;
-	}*/
+	*/
 }
 
 void GameFramework::Render()
@@ -955,4 +962,28 @@ void GameFramework::JumpUpdate(float dt)
 		m_PrevHeight = pcPos.y; // insert the height of 
 		m_Player->setPosition(pcPos);
 	}
+}
+
+void GameFramework::playerAnimationUpdate(float dt)
+{
+	int animationTime = GetTickCount64() - m_AnimationTimer;
+	if (animationTime > 500)
+	{
+		if (m_AnimationTexture == 0) {
+			m_AnimationTexture++;
+			m_IsAnimationAsc = true;
+		}
+		else if (m_AnimationTexture == 2) {
+			m_AnimationTexture--;
+			m_IsAnimationAsc = false;
+		}
+		else
+			m_IsAnimationAsc ? m_AnimationTexture++ : --m_AnimationTexture;
+		// if (m_AnimationTexture == 0 || m_AnimationTexture == 2)
+			// m_IsAnimationAsc != m_IsAnimationAsc;
+
+		m_Player->setTexture(m_Texture->GetTexture(m_AnimationTexture));
+		m_AnimationTimer = GetTickCount64();
+	}
+	
 }

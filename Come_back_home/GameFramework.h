@@ -69,6 +69,9 @@ public:
 
 	void JumpUpdate(float dt);
 
+	void changeInvader(float dt, LPDIRECT3DTEXTURE9 texture); // in change scene
+	void playerAnimationUpdate(float dt);
+	
 	float m_ScreenWidth;
 	float m_ScreenHeight;
 
@@ -139,4 +142,9 @@ protected:
 	float m_JumpPower; // Jump Power
 
 	// MYSQL m_MySql;
+
+	//player animation
+	bool m_IsAnimationAsc; // image order
+	float m_AnimationTimer;
+	int m_AnimationTexture;
 };
