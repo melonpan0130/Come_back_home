@@ -642,37 +642,9 @@ void GameFramework::Update(float dt)
 		// change scene
 		m_Background1[1]->EndScene(m_Texture->GetTexture(24)); // change ground
 		
-		m_Invader->ArrangePosition(-300, m_ScreenWidth + 300); // invader arrage to go out
-		ha = 2;
-		/*
-		// animation that teacher get out
-		if (m_Invader->IsTouched(-150, m_ScreenWidth + 150, m_InvaderRightDir)) { // rewrite after - test
-			// m_InvaderRightDir != m_InvaderRightDir;
-			// m_Invader->setAlive(false); // invader die...
-			ha = 5;
-		}
-		*/
+		// change invader
+		changeInvader(dt, m_Texture->GetTexture(30), m_Texture->GetTexture(31));
 	}
-	
-	if (m_fTotalTime > changeScene + 5.f && once)
-	{
-		m_Invader->setPosition(D3DXVECTOR3(m_ScreenWidth - 150, 350, 0));
-		once = false;
-		m_Invader->setTexture(m_Texture->GetTexture(30));
-		m_InvaderPM->setTextureAll(m_Texture->GetTexture(31));
-		ha = 10;
-	}
-	/*
-	if (m_fTotalTime > changeScene + 5.f)
-	{
-		m_Invader->setPosition(D3DXVECTOR3(m_ScreenWidth-150, 350, 0));
-		// m_Invader->setDirection(-1.f, 0);
-		m_Invader->setTexture(m_Texture->GetTexture(30));
-		m_InvaderPM->setTextureAll(m_Texture->GetTexture(31));
-		// m_Invader->setAlive(true);
-		ha = 7;
-	}
-	*/
 }
 
 void GameFramework::Render()
@@ -964,23 +936,45 @@ void GameFramework::JumpUpdate(float dt)
 	}
 }
 
+void GameFramework::changeInvader(float changeTime, LPDIRECT3DTEXTURE9 texture, LPDIRECT3DTEXTURE9 payload)
+{
+	float timer = m_fTotalTime - changeTime;
+
+	if(m_Invader->getAlive()==false)
+	{ 
+		m_Invader->setPosition(D3DXVECTOR3(m_ScreenWidth + 150, 350, 0));
+		m_Invader->setTexture(texture);
+		m_InvaderPM->setTextureAll(payload);
+		m_Invader->setAlive(true);
+		ha = 10;
+	}
+	else if (timer > 3.f && once)
+	{ // change scene and invader
+		m_Invader->ArrangePosition(-300, m_ScreenWidth + 300); // invader arrage to go out
+		ha = 2;
+		if (m_Invader->IsTouched(-300))
+		{
+			m_Invader->setAlive(false);
+			once = false;
+		}
+	}
+}
+
 void GameFramework::playerAnimationUpdate(float dt)
 {
-	int animationTime = GetTickCount64() - m_AnimationTimer;
-	if (animationTime > 500)
+	int timer = GetTickCount64() - m_AnimationTimer;
+	if (timer > 500)
 	{
 		if (m_AnimationTexture == 0) {
-			m_AnimationTexture++;
 			m_IsAnimationAsc = true;
+			m_AnimationTexture++;
 		}
 		else if (m_AnimationTexture == 2) {
-			m_AnimationTexture--;
 			m_IsAnimationAsc = false;
+			m_AnimationTexture--;
 		}
-		else
+		else // m_AnimationTexture == 1
 			m_IsAnimationAsc ? m_AnimationTexture++ : --m_AnimationTexture;
-		// if (m_AnimationTexture == 0 || m_AnimationTexture == 2)
-			// m_IsAnimationAsc != m_IsAnimationAsc;
 
 		m_Player->setTexture(m_Texture->GetTexture(m_AnimationTexture));
 		m_AnimationTimer = GetTickCount64();

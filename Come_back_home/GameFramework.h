@@ -69,7 +69,7 @@ public:
 
 	void JumpUpdate(float dt);
 
-	void changeInvader(float dt, LPDIRECT3DTEXTURE9 texture); // in change scene
+	void changeInvader(float changeTime, LPDIRECT3DTEXTURE9 texture, LPDIRECT3DTEXTURE9 payload); // in change scene
 	void playerAnimationUpdate(float dt);
 	
 	float m_ScreenWidth;
