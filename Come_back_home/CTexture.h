@@ -1,5 +1,5 @@
 #pragma once
-#define MAX_SIZE 50
+#define MAX_SIZE 100
 
 class CTexture
 {

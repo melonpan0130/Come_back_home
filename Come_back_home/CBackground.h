@@ -25,6 +25,12 @@ public:
 		loop = false;
 	}
 
+	void setSpeedUp(float speedUp, boolean flag) {
+		// speed up
+		if(flag)
+			m_ScrollSpeed *= speedUp;
+	}
+
 protected:
 	CSprite* m_Spr[3];
 

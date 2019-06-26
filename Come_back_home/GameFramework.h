@@ -131,6 +131,7 @@ protected:
 	// item
 	float m_ItemTimer[3][4];
 	bool m_ItemSwitch[3];
+	bool m_speedUpOnce;
 
 	// player Jump
 	bool m_Jump; // is jumping?
@@ -143,8 +144,15 @@ protected:
 
 	// MYSQL m_MySql;
 
+	// change invader
+	boolean m_changeInvStatus;
+
 	//player animation
 	bool m_IsAnimationAsc; // image order
 	float m_AnimationTimer;
 	int m_AnimationTexture;
+	boolean m_playerCollisioned;
+
+	// game Difficulty
+	// invaderpm timer more shoter
 };

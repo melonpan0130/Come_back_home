@@ -36,6 +36,14 @@ public:
 
 	void Update(float dt);
 	void Draw();
+	void setSpeedUp(float speedUp, bool flag)
+	{
+		if (flag)
+			m_Speed *= speedUp;
+		else
+			m_Speed = m_speedUp;
+
+	}
 
 protected:
 	CSprite* m_Spr; // payload
@@ -44,6 +52,7 @@ protected:
 	D3DXVECTOR2 m_ScreenSize; // payload flies in this screensize
 
 	float m_Speed;
+	float m_speedUp;
 	float m_MinX;
 	bool m_Alive;
 };

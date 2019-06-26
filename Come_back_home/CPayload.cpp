@@ -14,6 +14,7 @@ CPayload::CPayload(LPDIRECT3DDEVICE9 pD3DDevice
 	, float MinX)
 	:m_Alive(false)
 	, m_Speed(speed)
+	, m_speedUp(speed)
 	, m_Dir(dir)
 	, m_ScreenSize(screensize)
 	, m_MinX(MinX)

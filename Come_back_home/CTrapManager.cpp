@@ -131,3 +131,17 @@ bool CTrapManager::IsCollision(const D3DXVECTOR3& pos, float radious, int type)
 		}
 	return false;
 }
+
+void CTrapManager::setSpeedUp(float speedUp, bool flag)
+{	
+	for (int i = 0; i < 3; i++)
+			for (int j = 0; j < PAYLOAD_MAX; j++)
+				m_Payload[i][j]->setSpeedUp(speedUp, flag);
+}
+
+void CTrapManager::setDeadAll()
+{
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < PAYLOAD_MAX; j++)
+			m_Payload[i][j]->SetAlive(false);
+}

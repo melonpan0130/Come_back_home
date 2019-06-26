@@ -64,5 +64,5 @@ void CBackground::Render()
 {
 	m_Spr[0]->Draw();
 	m_Spr[1]->Draw();
-	m_Spr[2]->Draw();
+	m_Spr[2]->Draw();	
 }

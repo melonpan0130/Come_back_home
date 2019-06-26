@@ -37,6 +37,9 @@ public:
 	bool IsCollision(const D3DXVECTOR3& pos, float radious);
 	bool IsCollision(const D3DXVECTOR3& pos, float radious, int type);
 
+	void setSpeedUp(float speedUp, bool flag);
+	void setDeadAll();
+
 protected:
 	CPayload* m_Payload[3][PAYLOAD_MAX];
 	float m_Size[2][3];
