@@ -34,17 +34,20 @@ CTrapManager::CTrapManager(LPDIRECT3DDEVICE9 pD3DDevice
 	, const D3DXVECTOR3 dir
 	, const D3DXVECTOR2 screensize
 	, float MinX)
+	:textureNum(3)
 {
 	for (int i = 0; i < 2; i++) {
 		if (i == 0) { // width
 			m_Size[i][0] = center1.x * 2;
 			m_Size[i][1] = center2.x * 2;
 			m_Size[i][2] = center3.x * 2;
+			m_Size[i][3] = center3.x * 2;
 		}
 		else { // height
 			m_Size[i][0] = center1.y * 2;
 			m_Size[i][1] = center2.y * 2;
 			m_Size[i][2] = center3.y * 2;
+			m_Size[i][3] = center3.y * 2;
 		}
 	}
 
@@ -56,14 +59,63 @@ CTrapManager::CTrapManager(LPDIRECT3DDEVICE9 pD3DDevice
 			, texture2, D3DXVECTOR3(0.f, m_Size[1][1], 0.f), speed, dir, screensize, MinX);
 		m_Payload[2][i] = new CPayload(pD3DDevice
 			, texture3, D3DXVECTOR3(0.f, m_Size[1][2], 0.f), speed, dir, screensize, MinX);
+		m_Payload[3][i] = new CPayload(pD3DDevice
+			, texture3, D3DXVECTOR3(0.f, m_Size[1][3], 0.f), speed, dir, screensize, MinX);
+	}
+}
+
+CTrapManager::CTrapManager(LPDIRECT3DDEVICE9 pD3DDevice
+	, LPDIRECT3DTEXTURE9 texture1
+	, LPDIRECT3DTEXTURE9 texture2
+	, LPDIRECT3DTEXTURE9 texture3
+	, LPDIRECT3DTEXTURE9 texture4
+	, LPDIRECT3DTEXTURE9 texture5
+	, const D3DXVECTOR3& center1
+	, const D3DXVECTOR3& center2
+	, const D3DXVECTOR3& center3
+	, const D3DXVECTOR3& center4
+	, const D3DXVECTOR3& center5
+	, float speed
+	, const D3DXVECTOR3 dir
+	, const D3DXVECTOR2 screensize
+	, float MinX)
+	:textureNum(5)
+{
+	for (int i = 0; i < 2; i++) {
+		if (i == 0) { // width
+			m_Size[i][0] = center1.x * 2;
+			m_Size[i][1] = center2.x * 2;
+			m_Size[i][2] = center3.x * 2;
+			m_Size[i][3] = center4.x * 2;
+			m_Size[i][4] = center5.x * 2;
+		}
+		else { // height
+			m_Size[i][0] = center1.y * 2;
+			m_Size[i][1] = center2.y * 2;
+			m_Size[i][2] = center3.y * 2;
+			m_Size[i][3] = center4.y * 2;
+			m_Size[i][4] = center5.y * 2;
+		}
 	}
 
-	
+	for (int i = 0; i < PAYLOAD_MAX; i++)
+	{
+		m_Payload[0][i] = new CPayload(pD3DDevice
+			, texture1, D3DXVECTOR3(0.f, m_Size[1][0], 0.f), speed, dir, screensize, MinX);
+		m_Payload[1][i] = new CPayload(pD3DDevice
+			, texture2, D3DXVECTOR3(0.f, m_Size[1][1], 0.f), speed, dir, screensize, MinX);
+		m_Payload[2][i] = new CPayload(pD3DDevice
+			, texture3, D3DXVECTOR3(0.f, m_Size[1][2], 0.f), speed, dir, screensize, MinX);
+		m_Payload[3][i] = new CPayload(pD3DDevice
+			, texture4, D3DXVECTOR3(0.f, m_Size[1][3], 0.f), speed, dir, screensize, MinX);
+		m_Payload[4][i] = new CPayload(pD3DDevice
+			, texture5, D3DXVECTOR3(0.f, m_Size[1][4], 0.f), speed, dir, screensize, MinX);
+	}
 }
 
 CTrapManager::~CTrapManager()
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < textureNum; i++)
 		for (int j = 0; j < PAYLOAD_MAX; j++)
 			delete m_Payload[i][j];
 }
@@ -78,7 +130,7 @@ int CTrapManager::getEmptyPayload(int type)
 
 void CTrapManager::Update(float dt)
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < textureNum; i++)
 		for (int j = 0; j < PAYLOAD_MAX; j++)
 			if (m_Payload[i][j]->IsAlive())
 				m_Payload[i][j]->Update(dt);
@@ -86,7 +138,7 @@ void CTrapManager::Update(float dt)
 
 void CTrapManager::Draw()
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < textureNum; i++)
 		for (int j = 0; j < PAYLOAD_MAX; j++)
 			if (m_Payload[i][j]->IsAlive())
 				m_Payload[i][j]->Draw();
@@ -101,7 +153,7 @@ void CTrapManager::OnFire(const D3DXVECTOR3 & pos, int type)
 
 bool CTrapManager::IsCollision(const D3DXVECTOR3 & pos, float radious)
 {
-	for(int i=0; i<3; i++)
+	for(int i=0; i<textureNum; i++)
 		for(int j=0; j<PAYLOAD_MAX; j++)
 			if (m_Payload[i][j]->IsAlive())
 			{
@@ -134,14 +186,15 @@ bool CTrapManager::IsCollision(const D3DXVECTOR3& pos, float radious, int type)
 
 void CTrapManager::setSpeedUp(float speedUp, bool flag)
 {	
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < textureNum; i++)
 			for (int j = 0; j < PAYLOAD_MAX; j++)
 				m_Payload[i][j]->setSpeedUp(speedUp, flag);
 }
 
 void CTrapManager::setDeadAll()
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < textureNum; i++)
 		for (int j = 0; j < PAYLOAD_MAX; j++)
 			m_Payload[i][j]->SetAlive(false);
 }
+

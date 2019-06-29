@@ -1,9 +1,4 @@
 #pragma once
-
-#include <WinSock2.h>
-#include <mysql.h>
-#pragma comment(lib, "libmysql.lib")
-
 class CText;
 class CInput;
 class CTexture;
@@ -59,8 +54,8 @@ public:
 	void Update2(float dt);
 	void Render2();
 
-	void OutroUpdate(float dt);
-	void OutroRender();
+	void gameOverUpdate(float dt);
+	void gameOverRender();
 
 	void PayloadUpdate(float dt);
 	void InvaderCollision(float dt); // is invader collisioned?
@@ -71,6 +66,8 @@ public:
 
 	void changeInvader(float changeTime, LPDIRECT3DTEXTURE9 texture, LPDIRECT3DTEXTURE9 payload); // in change scene
 	void playerAnimationUpdate(float dt);
+
+	void warheadUpdate(float dt);
 	
 	float m_ScreenWidth;
 	float m_ScreenHeight;
@@ -106,6 +103,8 @@ protected:
 	CBackground* m_Title[6]; // title background
 	CBackground* m_Ready;
 	CBackground* m_Background1[2]; // stage 1's background
+
+	// stage2
 	CBackground* m_Background2[4]; // stage 2's background
 	CBackground* m_Raining; // stage 2's weather
 	CBackground* m_Bar; // score Bar, life Bar
@@ -116,22 +115,27 @@ protected:
 	CPayloadManager* m_TrapPM;
 	CPayloadManager* m_ItemPM;
 	CTrapManager* m_TrapTM;
+	CTrapManager* m_TrapTM2;
 
 	// invader
 	D3DXVECTOR3 m_InvaderPos;
 	D3DXVECTOR3 m_InvaderDir;
 	float m_InvaderShootTimer; // Invader shoot timer
+	float m_InvShootTimeInterval;
 	bool m_InvaderRightDir; // Is invader going right?
 	int m_InvaderCount; // How much damage to invader?
 
 	// trap
 	float m_TrapShootTimer;
 	float m_TrapGap;
+	// boolean m_TrapBeQuiet;
 	
 	// item
 	float m_ItemTimer[3][4];
 	bool m_ItemSwitch[3];
 	bool m_speedUpOnce;
+	bool m_warheadAction;
+	CSprite* m_Warhead;
 
 	// player Jump
 	bool m_Jump; // is jumping?
@@ -153,6 +157,22 @@ protected:
 	int m_AnimationTexture;
 	boolean m_playerCollisioned;
 
+	// change Scene
+	boolean once = true;
+	float changeScene = 0.f;
+	boolean changeEnd = false;
+	boolean changeTrap = false;
+
+	// map
+	int m_mapIndex;
+
+	// music
+	boolean musicOnce;
+
+	// gameover
+	boolean m_IsWin;
+	float gameOverTime;
+	CBackground* m_GameOverBG;
 	// game Difficulty
 	// invaderpm timer more shoter
 };
