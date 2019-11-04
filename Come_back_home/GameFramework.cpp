@@ -957,14 +957,7 @@ void GameFramework::PayloadUpdate(float dt)
 	m_ItemPM->Update(dt);
 
 	if (m_Input->IsPressed(DIK_SPACE))
-		if (m_Invader->getPosition().x - m_Player->getPosition().x > (m_ScreenWidth / 3 * 2))
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(1.f, -0.7f, 0.f));
-		else if (m_Invader->getPosition().x - m_Player->getPosition().x > (m_ScreenWidth / 3))
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.5f, -0.8f, 0.f));
-		else if (m_Invader->getPosition().x - m_Player->getPosition().x < -(m_ScreenWidth / 3))
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(-0.5f, -0.8f, 0.f));
-		else
-			m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.f, -1.f, 0.f));
+		m_PlayerPM->OnFire(m_Player->getPosition(), D3DXVECTOR3(0.f, -1.f, 0.f));
 
 	// make invader one shoot in one seconds. The other too.
 	int invader_time = GetTickCount64() - m_InvaderShootTimer;
