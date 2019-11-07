@@ -13,42 +13,41 @@
   C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   GameFramework.cpp
   C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-D:\Come_back_home\Come_back_home\CTrapManager.h(2,1): warning C4005:  'PAYLOAD_MAX': 매크로 재정의
-D:\Come_back_home\Come_back_home\CPayloadManager.h(2): message :  'PAYLOAD_MAX'의 이전 정의를 참조하십시오.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(70,26): warning C4244:  '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(71,27): warning C4244:  '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(216,31): warning C4244:  '=': 'ULONGLONG'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(261,9): warning C4244:  '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(334,31): warning C4244:  '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(363,31): warning C4244:  '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(453,19): warning C4244:  '초기화 중': 'ULONGLONG'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(639,33): warning C4244:  '=': 'ULONGLONG'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(652,17): warning C4244:  '초기화 중': 'ULONGLONG'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(703,31): warning C4244:  '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(738,30): warning C4244:  '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(850,31): warning C4244:  '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(919,31): warning C4244:  '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(963,19): warning C4244:  '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(964,16): warning C4244:  '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(969,39): warning C4244:  '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(986,48): warning C4244:  '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(989,50): warning C4244:  '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(992,51): warning C4244:  '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(994,51): warning C4244:  '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(996,51): warning C4244:  '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(998,51): warning C4244:  '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(1000,51): warning C4244:  '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(1003,36): warning C4244:  '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(1012,38): warning C4244:  '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(1098,33): warning C4244:  '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(1109,32): warning C4244:  '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(1126,38): warning C4244:  '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(1127,38): warning C4244:  '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(1198,12): warning C4244:  '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Come_back_home\Come_back_home\GameFramework.cpp(1220,36): warning C4244:  '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\CTrapManager.h(2,1): warning C4005: 'PAYLOAD_MAX': 매크로 재정의
+D:\Come_back_home\Come_back_home\CPayloadManager.h(2): message : 'PAYLOAD_MAX'의 이전 정의를 참조하십시오.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(70,26): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(71,27): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(216,31): warning C4244: '=': 'ULONGLONG'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(261,9): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(334,31): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(363,31): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(453,19): warning C4244: '초기화 중': 'ULONGLONG'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(639,33): warning C4244: '=': 'ULONGLONG'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(652,17): warning C4244: '초기화 중': 'ULONGLONG'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(703,31): warning C4244: '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(738,30): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(850,31): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(919,31): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(963,19): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(964,16): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(969,39): warning C4244: '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(986,48): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(989,50): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(992,51): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(994,51): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(996,51): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(998,51): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(1000,51): warning C4244: '인수': 'double'에서 'FLOAT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(1003,36): warning C4244: '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(1012,38): warning C4244: '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(1098,33): warning C4244: '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(1109,32): warning C4244: '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(1126,38): warning C4244: '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(1127,38): warning C4244: '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(1198,12): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+D:\Come_back_home\Come_back_home\GameFramework.cpp(1220,36): warning C4244: '=': 'ULONGLONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다.
-  5 of 146 functions ( 3.4%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    6 functions had inline decision re-evaluated but remain unchanged
+  Compiler version has changed, fall back to full compilation.
+  All 146 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   코드를 생성했습니다.
   Come_back_home.vcxproj -> D:\Come_back_home\Release\Come_back_home.exe
