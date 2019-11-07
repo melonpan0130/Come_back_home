@@ -7,4 +7,4 @@
      * If your score lower than -1000
      * If your three heart be lost (The heart is lost one by one when attacked by payload that invader shoot)
 
-![](.\test\game1.gif)
+<img src="./test/game1.gif" />
