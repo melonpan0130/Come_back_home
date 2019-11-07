@@ -7,4 +7,4 @@
      * If your score lower than -1000
      * If your three heart be lost (The heart is lost one by one when attacked by payload that invader shoot)
 
-[![watch the video](D:\Come_back_home\test\ha.jpg)](./test/game1.mp4)
+![](D:\Come_back_home\test\game1.gif)
